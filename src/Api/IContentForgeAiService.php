@@ -1,0 +1,23 @@
+<?php declare(strict_types=1);
+
+/***********************************************************************
+ * This file is part of ContentForge for BASE3 Framework.
+ *
+ * ContentForge provides a generic human-in-the-loop artifact production
+ * architecture with workflow steps, review decisions and export targets.
+ *
+ * Developed by Daniel Dahme
+ * Licensed under GPL-3.0
+ * https://www.gnu.org/licenses/gpl-3.0.en.html
+ **********************************************************************/
+
+namespace ContentForge\Api;
+
+use ContentForge\Model\ContentForgeAiRequest;
+use ContentForge\Model\ContentForgeAiResult;
+
+interface IContentForgeAiService {
+	public function generateStructured(ContentForgeAiRequest $request): ContentForgeAiResult;
+	public function isAvailable(string $serviceName = ''): bool;
+	public function getStatus(string $serviceName = ''): array;
+}

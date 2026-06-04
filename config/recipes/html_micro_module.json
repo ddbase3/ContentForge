@@ -1,0 +1,45 @@
+{
+    "id": "html_micro_module",
+    "title": "HTML Micro Module",
+    "description": "Initial deterministic generator workflow for a small reviewable HTML-ready learning/content module.",
+    "startNodeId": "generate_micro_module",
+    "nodes": [
+        {
+            "id": "generate_micro_module",
+            "type": "generate",
+            "handlerName": "contentforgehtmlmicromodulestephandler",
+            "outputType": "html_micro_module",
+            "reviewPolicy": "required_until_accepted",
+            "next": "export_html_package",
+            "transitions": {
+                "accept": "export_html_package",
+                "accept_with_changes": "export_html_package",
+                "request_changes": "generate_micro_module",
+                "reject": "generate_micro_module",
+                "skip": "export_html_package"
+            },
+            "config": {
+                "title": "HTML Micro Module",
+                "audience": "general",
+                "tone": "clear",
+                "sectionCount": 3,
+                "useAi": true,
+                "aiService": "mistral_default",
+                "temperature": 0.3,
+                "maxTokens": 4000
+            }
+        },
+        {
+            "id": "export_html_package",
+            "type": "export",
+            "handlerName": "contentforgeexportstephandler",
+            "outputType": "html_package",
+            "reviewPolicy": "optional",
+            "next": "",
+            "config": {
+                "exporter": "contentforgehtmlpackageexporter",
+                "target": "contentforgedownloadexporttarget"
+            }
+        }
+    ]
+}

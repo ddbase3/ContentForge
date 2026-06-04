@@ -1,0 +1,847 @@
+.contentforge-step-widget .cf-kicker {
+	margin: 0 0 .35rem;
+	font-size: .85rem;
+	font-weight: 700;
+	letter-spacing: .03em;
+	text-transform: uppercase;
+	color: #666;
+}
+
+.contentforge-step-widget h2,
+.contentforge-step-widget h3 {
+	margin-top: 0;
+}
+
+.contentforge-step-widget .cf-choice-list {
+	display: grid;
+	gap: .75rem;
+	margin-top: 1rem;
+}
+
+.contentforge-step-widget .cf-choice {
+	display: block;
+	width: 100%;
+	padding: .9rem 1rem;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background: #fff;
+	color: inherit;
+	text-align: left;
+	cursor: pointer;
+	transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
+}
+
+.contentforge-step-widget .cf-choice:hover,
+.contentforge-step-widget .cf-choice:focus-visible {
+	border-color: #444;
+	box-shadow: 0 0 0 3px rgba(0, 0, 0, .08);
+	outline: none;
+}
+
+.contentforge-step-widget .cf-choice.is-selected {
+	border-color: #111;
+	background: #f0f7ff;
+	box-shadow: 0 0 0 3px rgba(0, 84, 160, .18);
+}
+
+.contentforge-step-widget .cf-choice-head {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: .75rem;
+	margin-bottom: .25rem;
+}
+
+.contentforge-step-widget .cf-choice strong {
+	display: block;
+	margin: 0;
+}
+
+.contentforge-step-widget .cf-choice-body {
+	display: block;
+	color: #555;
+}
+
+.contentforge-step-widget .cf-selected-marker {
+	display: none;
+	flex: 0 0 auto;
+	border-radius: 5px;
+	padding: .2rem .55rem;
+	background: #111;
+	color: #fff;
+	font-size: .8rem;
+	font-weight: 700;
+}
+
+.contentforge-step-widget .cf-choice.is-selected .cf-selected-marker {
+	display: inline-block;
+}
+
+.contentforge-step-widget .cf-choice.is-selected .cf-choice-head::before {
+	content: "✓";
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.35rem;
+	height: 1.35rem;
+	border-radius: 5px;
+	background: #111;
+	color: #fff;
+	font-weight: 700;
+}
+
+.contentforge-step-widget .cf-selection-summary,
+.contentforge-step-widget .cf-review-notice,
+.contentforge-step-widget .cf-change-note {
+	display: block;
+	margin-top: .75rem;
+	padding: .7rem .8rem;
+	border-radius: 5px;
+	background: #f5f5f5;
+	color: #333;
+}
+
+.contentforge-step-widget .cf-selection-summary {
+	border: 1px dashed #ccc;
+}
+
+.contentforge-step-widget .cf-review-notice {
+	border: 1px solid #ddd;
+	background: #fffdf2;
+}
+
+.contentforge-step-widget .cf-review-notice[hidden] {
+	display: none;
+}
+
+.contentforge-step-widget .cf-change-note {
+	background: #fff7e6;
+	border-left: 4px solid #999;
+	font-size: .92rem;
+}
+
+.contentforge-step-widget .cf-edit-sections {
+	display: grid;
+	gap: 1rem;
+	margin-top: 1rem;
+}
+
+.contentforge-step-widget .cf-edit-section {
+	padding: 1rem;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	background: #fafafa;
+}
+
+.contentforge-step-widget .cf-steps {
+	margin: 0 0 1rem;
+	padding-left: 1.25rem;
+}
+
+.contentforge-step-widget .cf-steps li {
+	margin: .35rem 0;
+	color: #777;
+}
+
+.contentforge-step-widget .cf-steps li.is-active {
+	font-weight: 700;
+	color: #222;
+}
+
+.contentforge-step-widget .cf-steps li.is-done {
+	color: #333;
+}
+
+.contentforge-step-widget .cf-status-text {
+	margin: 0;
+	padding: .75rem;
+	border-radius: 5px;
+	background: #f5f5f5;
+}
+
+.contentforge-step-widget .cf-debug {
+	margin-top: .75rem;
+}
+
+.contentforge-step-widget .cf-debug pre {
+	max-height: 18rem;
+	overflow: auto;
+	padding: .75rem;
+	border-radius: 5px;
+	background: #f5f5f5;
+	font-size: .8rem;
+}
+
+.contentforge-step-widget .cf-result-list {
+	display: grid;
+	grid-template-columns: max-content minmax(0, 1fr);
+	gap: .35rem .75rem;
+}
+
+.contentforge-step-widget .cf-result-list dt {
+	font-weight: 700;
+}
+
+.contentforge-step-widget .cf-result-list dd {
+	margin: 0;
+	word-break: break-word;
+}
+
+.contentforge-step-widget.is-busy {
+	opacity: .75;
+}
+
+.contentforge-step-widget button:disabled {
+	cursor: wait;
+	opacity: .65;
+}
+
+.contentforge-json {
+	overflow: auto;
+	max-height: 30rem;
+	padding: 1rem;
+	border-radius: 5px;
+	background: #f6f6f6;
+}
+
+.contentforge-micro-module section {
+	margin-top: 1.25rem;
+}
+
+.contentforge-interaction {
+	margin-top: .75rem;
+	padding: .75rem;
+	border-left: 4px solid #999;
+	background: #f5f5f5;
+}
+
+.contentforge-change-request {
+	margin-top: .75rem;
+	padding: .75rem;
+	border-left: 4px solid #999;
+	background: #fff7e6;
+}
+
+.contentforge-step-widget .cf-error {
+	margin: 1rem 1rem 0;
+	padding: .85rem 1rem;
+	border: 1px solid #b00020;
+	border-radius: 5px;
+	background: #fff5f6;
+	color: #780014;
+	white-space: pre-wrap;
+}
+
+.contentforge-step-widget .cf-error[hidden] {
+	display: none;
+}
+
+
+/* Patch 013: readable, collapsible section cards. */
+.contentforge-step-widget .cf-choice {
+	border-color: #cfd6df;
+	background: #f8fafc;
+	color: #111827;
+	cursor: default;
+}
+
+.contentforge-step-widget .cf-choice:hover,
+.contentforge-step-widget .cf-choice:focus-within {
+	border-color: #6b7280;
+	box-shadow: 0 0 0 3px rgba(17, 24, 39, .08);
+}
+
+.contentforge-step-widget .cf-choice.is-selected {
+	border-color: #245b84;
+	background: #eef6ff;
+	box-shadow: 0 0 0 3px rgba(36, 91, 132, .18);
+}
+
+.contentforge-step-widget .cf-choice.is-selected .cf-choice-head::before {
+	content: none;
+	display: none;
+}
+
+.contentforge-step-widget .cf-choice-select {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: .75rem;
+	width: 100%;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: #111827;
+	text-align: left;
+	font: inherit;
+	cursor: pointer;
+}
+
+.contentforge-step-widget .cf-choice-select:hover,
+.contentforge-step-widget .cf-choice-select:focus-visible {
+	background: transparent;
+	color: #111827;
+	outline: 3px solid rgba(36, 91, 132, .25);
+	outline-offset: 4px;
+}
+
+.contentforge-step-widget .cf-choice-excerpt {
+	margin: .55rem 0 0;
+	color: #1f2937;
+}
+
+.contentforge-step-widget .cf-selected-marker {
+	background: #245b84;
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-template-details {
+	margin-top: .7rem;
+	border-top: 1px solid #d9e0e8;
+	padding-top: .6rem;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-template-details summary {
+	cursor: pointer;
+	font-weight: 700;
+	color: #245b84;
+}
+
+.contentforge-step-widget .cf-template-body {
+	margin-top: .65rem;
+	padding: .8rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-template-body p {
+	margin: 0;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-template-interaction {
+	margin-top: .75rem;
+	padding: .7rem .8rem;
+	border-left: 4px solid #245b84;
+	background: #f3f7fb;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-feedback-context-box {
+	margin: 1rem 0;
+	padding: 1rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #f8fafc;
+}
+
+.contentforge-step-widget .cf-feedback-context-box h3 {
+	margin: 0 0 .35rem;
+}
+
+.contentforge-step-widget .cf-feedback-context-box .cf-template-details {
+	border-top: 0;
+	padding-top: 0;
+}
+
+/* Patch 014: softer outer frame and multi-select section review. */
+.contentforge-step-widget .cf-choice.is-selected {
+	border-color: #245b84;
+	background: #eef6ff;
+	box-shadow: 0 0 0 3px rgba(36, 91, 132, .16);
+}
+
+.contentforge-step-widget .cf-selected-marker {
+	background: #245b84;
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-feedback-context-box {
+	background: #f8fafc;
+	border-color: #d9e0e8;
+}
+
+/* Patch 015: keep the widget frame soft after async styles have loaded. */
+.contentforge-step-widget .cf-main,
+.contentforge-step-widget .cf-side {
+	border: 1px solid #d9e0e8 !important;
+	border-radius: 5px !important;
+	background: #f8fafc !important;
+	box-shadow: none !important;
+}
+
+/* Patch 016: template-aware review and selected-section manual editing. */
+.contentforge-step-widget .cf-choice--faq .cf-choice-select strong::before {
+	content: "Q: ";
+	color: #245b84;
+}
+
+.contentforge-step-widget .cf-choice--checklist .cf-choice-select strong::before {
+	content: "☐ ";
+	color: #245b84;
+}
+
+.contentforge-step-widget .cf-choice--short_overview {
+	background: #fbfcfe;
+}
+
+.contentforge-step-widget .cf-choice--micro_learning {
+	background: #f8fafc;
+}
+
+.contentforge-step-widget .cf-choice-answer {
+	font-style: normal;
+}
+
+.contentforge-step-widget .cf-checklist-preview,
+.contentforge-step-widget .cf-template-checklist {
+	margin: .55rem 0 0;
+	padding-left: 1.4rem;
+	color: #1f2937;
+}
+
+.contentforge-step-widget .cf-checklist-preview li,
+.contentforge-step-widget .cf-template-checklist li {
+	margin: .25rem 0;
+}
+
+.contentforge-step-widget .cf-template-extra {
+	margin-top: .75rem;
+	padding: .65rem .75rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #f8fafc;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-edit-section h3 {
+	margin-top: 0;
+}
+
+.contentforge-step-widget [data-cf-edit-document-fields][hidden] {
+	display: none;
+}
+
+/* Patch 017: proposal section operations and per-section templates. */
+.contentforge-step-widget .cf-section-tools {
+	margin-top: 1rem;
+	padding: 1rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+}
+
+.contentforge-step-widget .cf-section-tools label {
+	margin-top: 0;
+}
+
+.contentforge-step-widget .cf-section-tool-buttons {
+	display: flex;
+	gap: .5rem;
+	flex-wrap: wrap;
+	margin-top: .75rem;
+}
+
+.contentforge-step-widget .cf-section-template-badge {
+	margin-left: auto;
+	padding: .2rem .5rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+	color: #374151;
+	font-size: .78rem;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.contentforge-step-widget .cf-choice.is-selected .cf-section-template-badge {
+	border-color: #bfdbfe;
+	background: #dbeafe;
+	color: #1e3a5f;
+}
+
+.contentforge-step-widget .cf-choice-select strong {
+	min-width: 0;
+}
+
+/* Patch 018: compact section toolbar, section actions and drag sorting. */
+.contentforge-step-widget .cf-section-tools-inline {
+	display: flex;
+	align-items: end;
+	gap: .5rem;
+	flex-wrap: wrap;
+	padding: .75rem;
+	background: #f8fafc;
+}
+
+.contentforge-step-widget .cf-section-tools-inline label {
+	flex: 0 0 auto;
+	margin: 0;
+	padding-bottom: .72rem;
+}
+
+.contentforge-step-widget .cf-section-tools-inline select {
+	flex: 1 1 16rem;
+	min-width: 12rem;
+}
+
+.contentforge-step-widget .cf-section-tools-inline button {
+	flex: 0 0 auto;
+}
+
+.contentforge-step-widget .cf-review-actions {
+	align-items: center;
+}
+
+.contentforge-step-widget .cf-drag-handle {
+	flex: 0 0 auto;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+	color: #4b5563;
+	font-weight: 700;
+	cursor: grab;
+	user-select: none;
+}
+
+.contentforge-step-widget .cf-drag-handle:active {
+	cursor: grabbing;
+}
+
+.contentforge-step-widget .cf-choice.is-dragging {
+	opacity: .55;
+}
+
+.contentforge-step-widget .cf-choice.is-drag-over {
+	border-color: #245b84;
+	box-shadow: 0 0 0 3px rgba(36, 91, 132, .22);
+}
+
+@media (max-width: 760px) {
+	.contentforge-step-widget .cf-section-tools-inline {
+		align-items: stretch;
+	}
+
+	.contentforge-step-widget .cf-section-tools-inline label,
+	.contentforge-step-widget .cf-section-tools-inline select,
+	.contentforge-step-widget .cf-section-tools-inline button {
+		flex: 1 1 100%;
+	}
+
+	.contentforge-step-widget .cf-section-tools-inline label {
+		padding-bottom: 0;
+	}
+}
+
+/* Patch 019: schema-backed templates, clearer actions and integrated drag handles. */
+.contentforge-step-widget .cf-review-actions {
+	gap: .4rem;
+	flex-wrap: wrap;
+}
+
+.contentforge-step-widget .cf-review-actions button {
+	padding: .55rem .72rem;
+}
+
+.contentforge-step-widget .cf-review-actions [data-cf-selection-required]:disabled {
+	cursor: not-allowed;
+	opacity: .45;
+}
+
+.contentforge-step-widget .cf-choice-head {
+	margin: -.9rem -1rem .75rem;
+	padding: .65rem .75rem;
+	border-radius: 5px 5px 0 0;
+	background: #243447;
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-choice-select {
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-choice-select:hover,
+.contentforge-step-widget .cf-choice-select:focus-visible {
+	color: #fff;
+	outline-color: rgba(255, 255, 255, .35);
+}
+
+.contentforge-step-widget .cf-choice--faq .cf-choice-select strong::before,
+.contentforge-step-widget .cf-choice--checklist .cf-choice-select strong::before {
+	color: #bfdbfe;
+}
+
+.contentforge-step-widget .cf-section-template-badge {
+	border-color: rgba(255, 255, 255, .25);
+	background: rgba(255, 255, 255, .12);
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-choice.is-selected .cf-section-template-badge {
+	border-color: rgba(255, 255, 255, .45);
+	background: rgba(255, 255, 255, .2);
+	color: #fff;
+}
+
+.contentforge-step-widget .cf-drag-handle {
+	border-color: rgba(255, 255, 255, .28);
+	background: rgba(255, 255, 255, .12);
+	color: #fff;
+	cursor: grab;
+}
+
+.contentforge-step-widget .cf-drag-handle:hover,
+.contentforge-step-widget .cf-drag-handle:focus-visible {
+	background: rgba(255, 255, 255, .2);
+	outline: 3px solid rgba(255, 255, 255, .3);
+	outline-offset: 2px;
+}
+
+.contentforge-step-widget .cf-field-help {
+	margin: -.15rem 0 .35rem;
+	font-size: .88rem;
+	color: #4b5563;
+}
+
+@media (min-width: 980px) {
+	.contentforge-step-widget .cf-review-actions {
+		flex-wrap: nowrap;
+	}
+}
+
+/* Patch 020: simpler section headers without nested dark button backgrounds. */
+.contentforge-step-widget .cf-choice-head {
+	background: #f3f7fb;
+	color: #111827;
+	border-bottom: 1px solid #d9e0e8;
+}
+
+.contentforge-step-widget .cf-choice-head .cf-choice-select {
+	border: 0 !important;
+	background: transparent !important;
+	color: #111827 !important;
+	box-shadow: none !important;
+	padding: 0 !important;
+}
+
+.contentforge-step-widget .cf-choice-head .cf-choice-select:hover,
+.contentforge-step-widget .cf-choice-head .cf-choice-select:focus-visible {
+	background: transparent !important;
+	color: #111827 !important;
+	outline-color: rgba(36, 91, 132, .28);
+}
+
+.contentforge-step-widget .cf-choice-head .cf-choice-select strong {
+	background: transparent !important;
+	color: #111827 !important;
+}
+
+.contentforge-step-widget .cf-choice--faq .cf-choice-select strong::before,
+.contentforge-step-widget .cf-choice--checklist .cf-choice-select strong::before {
+	color: #245b84;
+}
+
+.contentforge-step-widget .cf-section-template-badge,
+.contentforge-step-widget .cf-choice.is-selected .cf-section-template-badge {
+	border-color: #cfd6df;
+	background: #fff;
+	color: #374151;
+}
+
+.contentforge-step-widget .cf-drag-handle {
+	border-color: #cfd6df;
+	background: #fff;
+	color: #374151;
+}
+
+.contentforge-step-widget .cf-drag-handle:hover,
+.contentforge-step-widget .cf-drag-handle:focus-visible {
+	background: #eaf2fb;
+	outline: 3px solid rgba(36, 91, 132, .22);
+}
+
+/* Patch 021: multiple material inputs and integrated material previews. */
+.contentforge-step-widget .cf-material-list {
+	display: grid;
+	gap: .75rem;
+	margin-top: .75rem;
+}
+
+.contentforge-step-widget .cf-material-item,
+.contentforge-step-widget .cf-material-results {
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+	padding: .85rem;
+}
+
+.contentforge-step-widget .cf-material-row {
+	display: grid;
+	grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) auto auto;
+	gap: .5rem;
+	align-items: center;
+}
+
+.contentforge-step-widget .cf-material-text,
+.contentforge-step-widget .cf-material-url {
+	margin-top: .65rem;
+}
+
+.contentforge-step-widget .cf-material-input-preview,
+.contentforge-step-widget .cf-integrated-material {
+	margin-top: .65rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #f8fafc;
+	padding: .6rem .75rem;
+}
+
+.contentforge-step-widget .cf-material-input-preview pre,
+.contentforge-step-widget .cf-integrated-material pre {
+	white-space: pre-wrap;
+	max-height: 16rem;
+	overflow: auto;
+	margin: .5rem 0 0;
+	font: .9rem/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	color: #111827;
+}
+
+.contentforge-step-widget .cf-material-results {
+	margin: .85rem 0 1rem;
+	background: #f8fafc;
+}
+
+.contentforge-step-widget .cf-material-results h3 {
+	font-size: 1rem;
+	margin: 0 0 .5rem;
+}
+
+.contentforge-step-widget .cf-material-source {
+	margin: .45rem 0 0;
+	font-size: .9rem;
+	color: #4b5563;
+	word-break: break-all;
+}
+
+@media (max-width: 760px) {
+	.contentforge-step-widget .cf-material-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* Patch 022: live material preview in the material step. */
+.contentforge-step-widget .cf-material-row {
+	grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr) auto;
+}
+
+.contentforge-step-widget .cf-material-input-preview summary,
+.contentforge-step-widget .cf-integrated-material summary {
+	cursor: pointer;
+	font-weight: 700;
+	color: #245b84;
+}
+
+.contentforge-step-widget .cf-material-input-preview.is-loading {
+	border-color: #c7d2fe;
+	background: #f5f7ff;
+}
+
+.contentforge-step-widget .cf-material-input-preview.is-error,
+.contentforge-step-widget .cf-material-input-preview.is-invalid {
+	border-color: #fecaca;
+	background: #fff7f7;
+}
+
+.contentforge-step-widget .cf-material-input-preview.is-ready {
+	border-color: #d9e0e8;
+	background: #f8fafc;
+}
+
+/* Patch 023: persistent material panel beside the step workflow. */
+.contentforge-step-widget .cf-material-panel {
+	position: sticky;
+	top: 1rem;
+	max-height: calc(100vh - 2rem);
+	overflow: auto;
+}
+
+.contentforge-step-widget .cf-material-panel h3 {
+	margin: 0 0 .35rem;
+}
+
+.contentforge-step-widget .cf-material-panel .cf-material-list {
+	margin-top: .85rem;
+}
+
+.contentforge-step-widget .cf-material-actions {
+	margin-top: .75rem;
+}
+
+.contentforge-step-widget .cf-material-panel .cf-material-row {
+	grid-template-columns: minmax(6rem, 8rem) minmax(0, 1fr) auto;
+}
+
+.contentforge-step-widget .cf-material-panel textarea {
+	min-height: 6rem;
+}
+
+@media (max-width: 760px) {
+	.contentforge-step-widget .cf-material-panel {
+		position: static;
+		max-height: none;
+		order: -1;
+	}
+
+	.contentforge-step-widget .cf-material-panel .cf-material-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+
+/* Patch 025: export-template selection and cleaner material ownership. */
+.contentforge-step-widget .cf-export-tools {
+	display: flex;
+	align-items: end;
+	gap: .5rem;
+	flex-wrap: wrap;
+	margin-top: 1rem;
+	padding: .75rem;
+	border: 1px solid #d9e0e8;
+	border-radius: 5px;
+	background: #fff;
+}
+
+.contentforge-step-widget .cf-export-tools label {
+	flex: 0 0 auto;
+	margin: 0;
+	padding-bottom: .72rem;
+}
+
+.contentforge-step-widget .cf-export-tools select {
+	flex: 1 1 14rem;
+	min-width: 12rem;
+}
+
+@media (max-width: 760px) {
+	.contentforge-step-widget .cf-export-tools {
+		align-items: stretch;
+	}
+
+	.contentforge-step-widget .cf-export-tools label,
+	.contentforge-step-widget .cf-export-tools select {
+		flex: 1 1 100%;
+	}
+
+	.contentforge-step-widget .cf-export-tools label {
+		padding-bottom: 0;
+	}
+}
