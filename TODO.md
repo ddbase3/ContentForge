@@ -1,6 +1,6 @@
 # ContentForge TODO
 
-Version: 0.1.26
+Version: 0.1.32
 
 ## Near term
 
@@ -21,5 +21,7 @@ Version: 0.1.26
 
 - [ ] Add full SCORM package validation before download/publish.
 - [ ] Improve PDF typography and pagination beyond the MVP plain-text renderer.
+- [ ] Improve DOCX/PPTX layout beyond the MVP OpenXML renderers.
+- [ ] Add exporter option metadata to `IContentForgeExporter` when the extension API stabilizes.
 - [ ] Add a host-specific SCORM creation target.
 - [ ] Add a host-specific file-object creation target.

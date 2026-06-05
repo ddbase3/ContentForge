@@ -1,6 +1,6 @@
 # ContentForge Features
 
-Version: 0.1.26
+Version: 0.1.32
 
 ## Current MVP features
 
@@ -20,6 +20,9 @@ Version: 0.1.26
 - HTML package export.
 - SCORM 1.2 package export.
 - PDF document export.
+- DOCX document export.
+- PPTX presentation export.
+- Cross-plugin exporter discovery via BASE3 `IClassMap`.
 - Export-template selection in the review step.
 - Fixed export template configuration through `setData()`.
 - Interchangeable export targets.

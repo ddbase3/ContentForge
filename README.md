@@ -1,12 +1,12 @@
 # ContentForge
 
-Version: 0.1.26
+Version: 0.1.32
 
 ContentForge is a BASE3 plugin for human-in-the-loop artifact production. It provides a step-widget workflow for collecting source materials, generating a structured proposal, reviewing sections, requesting focused changes, editing manually and exporting the accepted result.
 
 ## Current focus
 
-Patch 0.1.26 introduces a cleaner export-delivery layer. Exporters create packages such as HTML, SCORM 1.2 or PDF. Export targets decide where those packages go. The default target now creates a BASE3-generated download link through `ILinkTargetService`.
+Patch 0.1.32 fixes the PPTX exporter package structure for stricter Microsoft PowerPoint compatibility. The exporter still creates one title slide plus one slide per generated ContentForge section, but now includes the required OpenXML relationships, document properties, presentation properties, view properties, table style part and a complete theme formatting scheme.
 
 ## Main concepts
 
@@ -44,6 +44,8 @@ The same material panel is intended to support future upload material types such
 - HTML package
 - SCORM 1.2 package
 - PDF document
+- DOCX document
+- PPTX presentation
 
 ## Export targets
 
@@ -59,4 +61,9 @@ See the `docs/` directory:
 - `docs/INTEGRATION.md`
 - `docs/SETDATA.md`
 - `docs/EXPORT_TARGETS.md`
+- `docs/EXPORTERS.md`
 - `docs/DOWNLOAD_ENDPOINT.md`
+
+## Patch 0.1.32 note
+
+PPTX exports now use a stricter OpenXML package structure for Microsoft PowerPoint compatibility. The exporter still creates one title slide plus one slide per generated ContentForge section, but now includes the required package properties, presentation properties, view properties, table style part, slide-layout relationship and a complete theme formatting scheme.

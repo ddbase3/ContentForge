@@ -30,6 +30,20 @@ class ContentForgeExporterRegistry implements IContentForgeExporterRegistry {
 	}
 
 	public function getExporter(string $name): ?IContentForgeExporter {
+		$name = $this->normalizeName($name);
+
+		foreach ($this->localExporters as $exporter) {
+			if ($exporter instanceof IContentForgeExporter && $exporter::getName() === $name) {
+				return $exporter;
+			}
+		}
+
+		$exporter = $this->getClassMapExporter($name);
+
+		if ($exporter !== null) {
+			return $exporter;
+		}
+
 		foreach ($this->getExporters() as $exporter) {
 			if ($exporter::getName() === $name) {
 				return $exporter;
@@ -46,6 +60,46 @@ class ContentForgeExporterRegistry implements IContentForgeExporterRegistry {
 		return $this->uniqueExporters($exporters);
 	}
 
+	public function getExportOptions(): array {
+		$options = [];
+
+		foreach ($this->getExporters() as $exporter) {
+			$name = $exporter::getName();
+			$options[] = [
+				'template' => $this->getExportTemplateForExporter($name),
+				'exporter' => $name,
+				'type' => $this->getExportTypeForExporter($name),
+				'label' => $this->getExportLabelForExporter($name),
+				'local' => $this->isLocalExporter($name)
+			];
+		}
+
+		usort($options, fn($a, $b) => [$this->getOptionSort((string) $a['template']), (string) $a['label']] <=> [$this->getOptionSort((string) $b['template']), (string) $b['label']]);
+
+		return $options;
+	}
+
+	protected function getOptionSort(string $template): int {
+		return match ($template) {
+			'html_package' => 10,
+			'scorm12' => 20,
+			'pdf_document' => 30,
+			'docx_document' => 40,
+			'pptx_presentation' => 50,
+			default => 100
+		};
+	}
+
+	protected function getClassMapExporter(string $name): ?IContentForgeExporter {
+		try {
+			$exporter =& $this->classMap->getInstanceByInterfaceName(IContentForgeExporter::class, $name);
+
+			return $exporter instanceof IContentForgeExporter ? $exporter : null;
+		} catch (\Throwable) {
+			return null;
+		}
+	}
+
 	protected function getClassMapExporters(): array {
 		try {
 			$exporters =& $this->classMap->getInstancesByInterface(IContentForgeExporter::class);
@@ -54,6 +108,64 @@ class ContentForgeExporterRegistry implements IContentForgeExporterRegistry {
 		} catch (\Throwable) {
 			return [];
 		}
+	}
+
+
+	protected function getExportTemplateForExporter(string $name): string {
+		return match ($name) {
+			'contentforgehtmlpackageexporter' => 'html_package',
+			'contentforgescorm12exporter' => 'scorm12',
+			'contentforgepdfdocumentexporter' => 'pdf_document',
+			'contentforgedocxdocumentexporter' => 'docx_document',
+			'contentforgepptxpresentationexporter' => 'pptx_presentation',
+			default => $name
+		};
+	}
+
+	protected function getExportTypeForExporter(string $name): string {
+		return match ($name) {
+			'contentforgehtmlpackageexporter' => 'html_package',
+			'contentforgescorm12exporter' => 'scorm12_package',
+			'contentforgepdfdocumentexporter' => 'pdf_document',
+			'contentforgedocxdocumentexporter' => 'docx_document',
+			'contentforgepptxpresentationexporter' => 'pptx_presentation',
+			default => $name
+		};
+	}
+
+	protected function getExportLabelForExporter(string $name): string {
+		return match ($name) {
+			'contentforgehtmlpackageexporter' => 'HTML package',
+			'contentforgescorm12exporter' => 'SCORM 1.2 package',
+			'contentforgepdfdocumentexporter' => 'PDF document',
+			'contentforgedocxdocumentexporter' => 'DOCX document',
+			'contentforgepptxpresentationexporter' => 'PPTX presentation',
+			default => $this->humanizeName($name)
+		};
+	}
+
+	protected function isLocalExporter(string $name): bool {
+		foreach ($this->localExporters as $exporter) {
+			if ($exporter instanceof IContentForgeExporter && $exporter::getName() === $name) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected function humanizeName(string $name): string {
+		$name = preg_replace('/^contentforge/', '', $name) ?? $name;
+		$name = preg_replace('/exporter$/', '', $name) ?? $name;
+		$name = trim((string) preg_replace('/[_-]+/', ' ', $name));
+
+		return $name !== '' ? ucwords($name) : 'Custom exporter';
+	}
+
+	protected function normalizeName(string $name): string {
+		$name = strtolower(trim($name));
+
+		return preg_replace('/[^a-z0-9._-]+/', '', $name) ?? '';
 	}
 
 	protected function uniqueExporters(array $exporters): array {

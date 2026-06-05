@@ -89,12 +89,14 @@ class ContentForgeDownloadExportTarget implements IContentForgeExportTarget {
 
 		$baseName = $this->buildBaseName($result->title);
 
-		if ($result->type === 'pdf_document' && isset($result->files['document.pdf'])) {
-			$path = $dir . '/' . $baseName . '-' . date('Ymd-His') . '.pdf';
-			file_put_contents($path, (string) $result->files['document.pdf']);
+		$singleFile = $this->getDirectExportFile($result);
+
+		if ($singleFile !== null) {
+			$path = $dir . '/' . $baseName . '-' . date('Ymd-His') . '.' . $singleFile['extension'];
+			file_put_contents($path, (string) $singleFile['content']);
 
 			if (is_file($path)) {
-				return ['path' => $path, 'extension' => 'pdf'];
+				return ['path' => $path, 'extension' => $singleFile['extension']];
 			}
 		}
 
@@ -120,6 +122,50 @@ class ContentForgeDownloadExportTarget implements IContentForgeExportTarget {
 		file_put_contents($path, json_encode($result->toArray(), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
 
 		return ['path' => $path, 'extension' => 'json'];
+	}
+
+	/**
+	 * Return a generated single-file office/document export directly.
+	 *
+	 * DOCX and PPTX are internally ZIP-based formats, but they are final user
+	 * files and must not be wrapped in another ZIP archive.
+	 */
+	protected function getDirectExportFile(ContentForgeExportResult $result): ?array {
+		$preferredNames = [
+			'pdf_document' => ['document.pdf'],
+			'docx_document' => ['document.docx'],
+			'pptx_presentation' => ['presentation.pptx']
+		];
+
+		foreach (($preferredNames[$result->type] ?? []) as $name) {
+			if (!array_key_exists($name, $result->files)) {
+				continue;
+			}
+
+			$extension = strtolower((string) pathinfo($name, PATHINFO_EXTENSION));
+
+			if (in_array($extension, ['pdf', 'docx', 'pptx'], true)) {
+				return [
+					'name' => $name,
+					'extension' => $extension,
+					'content' => $result->files[$name]
+				];
+			}
+		}
+
+		foreach ($result->files as $name => $content) {
+			$extension = strtolower((string) pathinfo((string) $name, PATHINFO_EXTENSION));
+
+			if (in_array($extension, ['pdf', 'docx', 'pptx'], true)) {
+				return [
+					'name' => (string) $name,
+					'extension' => $extension,
+					'content' => $content
+				];
+			}
+		}
+
+		return null;
 	}
 
 	protected function getExportPath(ContentForgeExportRequest $request): string {
@@ -162,6 +208,14 @@ class ContentForgeDownloadExportTarget implements IContentForgeExportTarget {
 
 		if ($extension === 'pdf' || $type === 'pdf_document') {
 			return 'application/pdf';
+		}
+
+		if ($extension === 'docx' || $type === 'docx_document') {
+			return 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+		}
+
+		if ($extension === 'pptx' || $type === 'pptx_presentation') {
+			return 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
 		}
 
 		return 'application/octet-stream';

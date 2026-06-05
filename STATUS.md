@@ -1,44 +1,33 @@
 # ContentForge Status
 
-Version: 0.1.26
+Version: 0.1.32
 
 ## Current state
 
-ContentForge has a working step-widget flow for multi-material input, proposal review, AI-assisted revision, manual editing, section operations and selectable HTML/SCORM/PDF export. Mixed section templates are backed by a registry service and provide JSON Schema definitions plus preview metadata for editing, validation and rendering.
+ContentForge is a working BASE3 MVP for human-in-the-loop content generation. It supports multi-material input, live web-link extraction, AI-assisted review loops, manual section editing, section operations, section templates and multiple export formats.
 
-## Changes in patch 0.1.26
+## Changes in patch 0.1.32
 
-- Fixed `ContentForgeMaterialIntakeService::deleteMaterial()` returning `null` while declaring `bool`.
-- User-facing error messages are now more defensive and shorter.
-- Detailed technical errors remain available in the `contentforge` log and in debug JSON when enabled.
-- Added a download endpoint implemented as BASE3 `IOutput`.
-- Default export delivery now returns a download URL generated through `ILinkTargetService`.
-- Added `contentforgefilestorageexporttarget` for storage-only export delivery.
-- Added `setData()` export configuration for fixed exporter/template and export target integration.
-- Added integration documentation in `docs/`.
-
-## Working baseline
-
-- BASE3 DI integration.
-- `IRequest`-based request handling.
-- SettingsStore-backed Mistral chat provider.
-- ContentForge-specific logging scope.
-- File-based MVP storage.
-- Persistent multi-material intake panel.
-- Text and web-link material previews.
-- Proposal review loop.
-- Template-aware section rendering.
-- Schema-backed section edit forms.
-- Schema-backed section validation.
-- Section add, duplicate, delete, move and drag reorder.
-- HTML, SCORM 1.2 and PDF export.
-- Download delivery through BASE3 link generation.
+- Rebuilt the PPTX package structure for stricter Microsoft PowerPoint compatibility.
+- Added missing OpenXML package parts for PPTX exports: core properties, app properties, presentation properties, view properties, table styles and slide layout relationships.
+- Linked slide layout, slide master and theme parts through explicit relationships.
+- Completed the theme formatting scheme instead of using an empty `<a:fmtScheme>` block.
+- Kept the presentation model simple and predictable: one title slide plus one slide per generated ContentForge section.
 
 ## Known limitations
 
-- Web link extraction is a first MVP extractor: it downloads public HTTP/HTTPS pages through the server and strips HTML to text. It is not a full article extraction engine yet.
-- Drag and drop is a convenience; button-based reordering remains the reliable fallback.
-- Validation intentionally supports a practical JSON Schema subset, not the complete JSON Schema standard.
-- No database repository implementation yet.
-- SCORM export is a first MVP package and still needs validation against LMS importers.
-- PDF export is a first MVP renderer and still needs better typography and pagination.
+- Download delivery is the default target, but host-specific placement targets must be implemented in the host/plugin that owns the placement logic.
+- PDF export is still an MVP output and not a full layout engine.
+- DOCX/PPTX exporters are MVP OpenXML outputs for interoperability tests, not full design/layout engines.
+- SCORM export is an MVP SCORM 1.2 package intended for import tests.
+
+## 0.1.32
+
+- PPTX exports now include stricter PowerPoint-compatible OpenXML package structure.
+- The exporter continues to create a title slide and one slide per section.
+
+## 0.1.31
+
+- `ContentForgeExportResult::$files` is no longer readonly, because external export targets often use `reset($result->files)` or similar PHP array-pointer helpers.
+- Error logging now has a file fallback at `ContentForge/var/log/contentforge.log` if the BASE3 logger is unavailable or fails.
+- DOCX/PPTX direct-file exports remain single-file results; metadata stays in `meta`, not in `files`.

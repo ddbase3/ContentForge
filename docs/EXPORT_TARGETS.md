@@ -1,6 +1,6 @@
 # ContentForge Export Targets
 
-Version: 0.1.26
+Version: 0.1.32
 
 ContentForge separates two concerns:
 
@@ -10,7 +10,7 @@ ContentForge separates two concerns:
 Examples:
 
 ```text
-Exporter: HTML package, SCORM 1.2 package, PDF document
+Exporter: HTML package, SCORM 1.2 package, PDF document, DOCX document, PPTX presentation
 Target: download link, file storage, host LMS object creation, API delivery
 ```
 
@@ -45,3 +45,47 @@ Possible targets:
 - store generated PDF in a document area
 - push export package to an external API
 - attach export package to an existing record
+
+## External export target discovery
+
+Export targets are extension points. ContentForge registers its built-in targets locally, but a target name may also resolve to a class provided by another BASE3 plugin.
+
+Lookup order:
+
+1. locally wired ContentForge targets
+2. `IClassMap::getInstanceByInterfaceName(IContentForgeExportTarget::class, $name)`
+3. full `IClassMap::getInstancesByInterface(IContentForgeExportTarget::class)` listing for capability introspection
+
+The technical target name follows the BASE3 convention: `getName()` returns the lowercase class name.
+
+Example:
+
+```php
+namespace Base3IliasLab\ContentForge;
+
+use ContentForge\Api\IContentForgeExportTarget;
+
+class ContentForgeIliasFileExportTarget implements IContentForgeExportTarget {
+	public static function getName(): string {
+		return 'contentforgeiliasfileexporttarget';
+	}
+}
+```
+
+A widget integration can then use:
+
+```php
+$display->setData([
+	'export_template' => 'pdf_document',
+	'export_template_locked' => true,
+	'export_target' => 'contentforgeiliasfileexporttarget',
+	'export_target_config' => [
+		'parent_ref_id' => 123
+	]
+]);
+```
+
+## Single-file document delivery
+
+`ContentForgeDownloadExportTarget` and `ContentForgeFileStorageExportTarget` deliver `.pdf`, `.docx` and `.pptx` outputs directly. HTML and SCORM package exports remain ZIP/package-oriented because they consist of multiple runtime files.
+

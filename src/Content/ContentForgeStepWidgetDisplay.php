@@ -163,7 +163,7 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 	protected function normalizeExportTemplate(string $value): string {
 		$value = strtolower(trim($value));
 
-		return in_array($value, ['html_package', 'scorm12', 'pdf_document'], true) ? $value : '';
+		return preg_replace('/[^a-z0-9._-]+/', '', $value) ?? '';
 	}
 
 	protected function normalizeTechnicalKey(string $value): string {

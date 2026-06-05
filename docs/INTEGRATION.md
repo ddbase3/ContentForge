@@ -1,6 +1,6 @@
 # ContentForge Integration Guide
 
-Version: 0.1.26
+Version: 0.1.28
 
 ContentForge is embedded through a BASE3 `IDisplay`. The preferred display is:
 
@@ -57,3 +57,6 @@ $display->setData([
 ```
 
 A host-specific target can later replace the download target and create a file object directly in the host system.
+
+
+See also `docs/EXPORTERS.md` for cross-plugin exporter discovery.

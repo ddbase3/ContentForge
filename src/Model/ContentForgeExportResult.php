@@ -18,9 +18,38 @@ class ContentForgeExportResult {
 		public readonly string $id,
 		public readonly string $type,
 		public readonly string $title,
-		public readonly array $files = [],
-		public readonly array $meta = []
+		public array $files = [],
+		public array $meta = []
 	) {}
+
+	public function getFileNames(): array {
+		return array_keys($this->files);
+	}
+
+	public function hasSingleFile(): bool {
+		return count($this->files) === 1;
+	}
+
+	public function getSingleFileName(): string {
+		if (!$this->hasSingleFile()) {
+			return '';
+		}
+
+		$name = array_key_first($this->files);
+
+		return is_string($name) ? $name : '';
+	}
+
+	public function getSingleFileContent(): string {
+		if (!$this->hasSingleFile()) {
+			return '';
+		}
+
+		$files = $this->files;
+		$content = reset($files);
+
+		return is_scalar($content) ? (string) $content : '';
+	}
 
 	public function toArray(): array {
 		return [

@@ -65,31 +65,37 @@ class ContentForgeExportStepHandler implements IContentForgeWorkflowNodeHandler 
 		$target = $this->normalizeTargetName((string) ($export['target'] ?? $nodeConfig['target'] ?? 'contentforgedownloadexporttarget'));
 		$targetConfig = is_array($export['targetConfig'] ?? null) ? $export['targetConfig'] : (is_array($nodeConfig['targetConfig'] ?? null) ? $nodeConfig['targetConfig'] : []);
 
-		return match ($template) {
-			'scorm12' => [
-				'template' => 'scorm12',
-				'type' => 'scorm12_package',
-				'exporter' => 'contentforgescorm12exporter',
-				'target' => $target,
-				'targetConfig' => $targetConfig
-			],
-			'pdf_document' => [
-				'template' => 'pdf_document',
-				'type' => 'pdf_document',
-				'exporter' => 'contentforgepdfdocumentexporter',
-				'target' => $target,
-				'targetConfig' => $targetConfig
-			],
-			default => [
-				'template' => 'html_package',
-				'type' => 'html_package',
-				'exporter' => (string) ($nodeConfig['exporter'] ?? 'contentforgehtmlpackageexporter'),
-				'target' => $target,
-				'targetConfig' => $targetConfig
-			]
-		};
+		$map = [
+			'html_package' => ['html_package', 'html_package', 'contentforgehtmlpackageexporter'],
+			'scorm12' => ['scorm12', 'scorm12_package', 'contentforgescorm12exporter'],
+			'pdf_document' => ['pdf_document', 'pdf_document', 'contentforgepdfdocumentexporter'],
+			'docx_document' => ['docx_document', 'docx_document', 'contentforgedocxdocumentexporter'],
+			'pptx_presentation' => ['pptx_presentation', 'pptx_presentation', 'contentforgepptxpresentationexporter']
+		];
+
+		[$resolvedTemplate, $type, $exporter] = $map[$template] ?? [$template, $template, $template];
+
+		if (($nodeConfig['exporter'] ?? '') !== '' && $template === 'html_package') {
+			$exporter = (string) $nodeConfig['exporter'];
+		}
+
+		return [
+			'template' => $resolvedTemplate,
+			'type' => $type,
+			'exporter' => $this->normalizeExporterName($exporter),
+			'target' => $target,
+			'targetConfig' => $targetConfig
+		];
 	}
 
+
+
+	protected function normalizeExporterName(string $value): string {
+		$value = strtolower(trim($value));
+		$value = preg_replace('/[^a-z0-9._-]+/', '', $value) ?? '';
+
+		return $value !== '' ? $value : 'contentforgehtmlpackageexporter';
+	}
 
 	protected function normalizeTargetName(string $value): string {
 		$value = strtolower(trim($value));

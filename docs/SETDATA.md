@@ -1,6 +1,6 @@
 # ContentForge Display setData Reference
 
-Version: 0.1.26
+Version: 0.1.28
 
 `ContentForgeStepWidgetDisplay::setData()` configures the embedded widget.
 
@@ -30,6 +30,8 @@ Supported export templates in the MVP:
 html_package
 scorm12
 pdf_document
+docx_document
+pptx_presentation
 ```
 
 Default target:
@@ -45,3 +47,16 @@ contentforgefilestorageexporttarget
 ```
 
 Host integrations should provide their own export target implementation and pass host-specific metadata through `export_target_config`.
+
+## Export selector behavior
+
+`export_template_locked` controls only the export template selector in the review step.
+
+```text
+export_template_locked=false   selector remains visible
+export_template_locked=true    selector is hidden and export_template is forced
+```
+
+`export_target` is not shown to the end user in the MVP. It is an integration setting for delivery or placement of the generated package.
+
+The target and custom exporter names must match the BASE3 technical-name convention: lowercase class name as returned by `getName()`.

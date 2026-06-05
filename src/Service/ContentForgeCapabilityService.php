@@ -47,10 +47,11 @@ class ContentForgeCapabilityService implements IContentForgeCapabilityService {
 			'parsers' => array_map(fn($parser) => $parser::getName(), $this->parserRegistry->getParsers()),
 			'renderers' => array_map(fn($renderer) => $renderer::getName(), $this->rendererRegistry->getRenderers()),
 			'exporters' => array_map(fn($exporter) => $exporter::getName(), $this->exporterRegistry->getExporters()),
+			'exportOptions' => $this->exporterRegistry->getExportOptions(),
 			'exportTargets' => array_map(fn($target) => $target::getName(), $this->targetRegistry->getTargets()),
-			'artifactTypes' => ['text', 'json', 'html_micro_module', 'html_package', 'scorm12_package', 'pdf_document', 'quality_report'],
+			'artifactTypes' => ['text', 'json', 'html_micro_module', 'html_package', 'scorm12_package', 'pdf_document', 'docx_document', 'pptx_presentation', 'quality_report'],
 			'materialTypes' => ['text', 'web_url'],
-			'exportTemplates' => ['html_package', 'scorm12', 'pdf_document'],
+			'exportTemplates' => array_map(fn($option) => $option['template'], $this->exporterRegistry->getExportOptions()),
 			'generatorTemplates' => array_map(fn($template) => $template->getKey(), $this->sectionTemplateRegistry->getTemplates()),
 			'sectionTemplates' => $this->sectionTemplateRegistry->getClientDefinitions(),
 			'decisionTypes' => ['accept', 'accept_with_changes', 'request_changes', 'reject', 'skip', 'branch']

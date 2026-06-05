@@ -1,6 +1,6 @@
 # ContentForge Download Endpoint
 
-Version: 0.1.26
+Version: 0.1.28
 
 The download endpoint is an `IOutput` implementation:
 

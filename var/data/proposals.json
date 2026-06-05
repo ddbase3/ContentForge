@@ -1,0 +1,1152 @@
+{
+    "proposal_8f1bc5fad8fb342d": {
+        "id": "proposal_8f1bc5fad8fb342d",
+        "projectId": "project_234eb4ec48c9ff4d",
+        "workflowInstanceId": "workflow_546c61dfe96b5bca",
+        "stepRunId": "steprun_485a6fff1eea9f4b",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "faq",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+            "summary": "Frequently Asked Questions about the DataHawk Plugin for BASE3 Framework",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "faq",
+                    "title": "What is the DataHawk Plugin for BASE3 Framework?",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Understand the basic functionality of DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "faq",
+                    "title": "What features does the DataHawk Plugin support?",
+                    "body": "The DataHawk Plugin supports a schema-driven query system, JSON query format compiled by MysqlReportQueryCompiler, various element/expression types, automatic join planning, aliasing support for stable column names, and sensitivity and data protection markings.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Learn about the key features of DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "How does the DataHawk Plugin handle schema management?",
+                    "body": "The schema is provided by an IQuerySchemaProvider, with a default JSON-based provider. Table metadata includes joins, tags, categories, domains, and default filters.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Understand the schema management in DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_4",
+                    "template": "faq",
+                    "title": "What types of queries does the DataHawk Plugin support?",
+                    "body": "The DataHawk Plugin supports SELECT, INSERT, DELETE, and TRANSACTION queries. Each type of query has a specific structure and supports various parameters and options.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Learn about the different types of queries supported by DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_5",
+                    "template": "faq",
+                    "title": "What exporters are available in the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin provides several exporters including CSV, JSON, HTML, HTML-Mail, and Excel-HTML. Each exporter serves different use cases such as data analysis, API integration, web preview, email delivery, and Excel downloads.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Understand the various exporters available in DataHawk Plugin."
+                    }
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2155,
+                            "total_tokens": 2795,
+                            "completion_tokens": 640,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "faq",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:33:43+00:00"
+    },
+    "proposal_fdd4898275b93089": {
+        "id": "proposal_fdd4898275b93089",
+        "projectId": "project_234eb4ec48c9ff4d",
+        "workflowInstanceId": "workflow_546c61dfe96b5bca",
+        "stepRunId": "steprun_381042bddcaf6612",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_7c472fc8056934ab",
+            "type": "html_package",
+            "path": "02f04800-45dd-4275-be3a-a4b484ad1328",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4673,
+                "ilias_obj_id": 28515,
+                "parent_ref_id": 4660,
+                "filename": "DataHawk-Plugin-for-BASE3-Framework-FAQ.zip",
+                "mimeType": "application/zip",
+                "fileCount": 2,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4673",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:33:53+00:00"
+    },
+    "proposal_4d440cf44f35aeb9": {
+        "id": "proposal_4d440cf44f35aeb9",
+        "projectId": "project_bc6f8990bf774098",
+        "workflowInstanceId": "workflow_966cee3e222e2c43",
+        "stepRunId": "steprun_2fc306d9cde077ce",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "faq",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+            "summary": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. This FAQ provides insights into its features, query syntax, and more.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "faq",
+                    "title": "What is the DataHawk Plugin for BASE3 Framework?",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read more about the DataHawk Plugin and its features."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "faq",
+                    "title": "What features does the DataHawk Plugin offer?",
+                    "body": "The DataHawk Plugin offers a schema-driven query system, JSON query format compiled by MysqlReportQueryCompiler, support for various element/expression types, automatic join planning, aliasing support for stable column names, and sensitivity and data protection features.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Explore the various features of the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "How does the DataHawk Plugin handle query execution?",
+                    "body": "Query execution is handled via IQueryService, which uses the BASE3 IDatabase for execution. It includes integrity validation for select results, write queries for affected rows and insert IDs, and supports atomic multi-step operations using a transaction query type.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Learn about the query execution process in the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_4",
+                    "template": "faq",
+                    "title": "What query types are supported by the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin supports various query types including SELECT, INSERT, DELETE, and TRANSACTION. Each query type has its own specific structure and parameters.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Understand the different query types supported by the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_5",
+                    "template": "faq",
+                    "title": "What exporters are available in the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin provides several exporters including CSV, JSON, HTML, HTML-Mail, and Excel-HTML. Each exporter serves different use cases such as data analysis, API integration, web preview, email delivery, and Excel downloads.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Discover the various exporters available in the DataHawk Plugin and their use cases."
+                    }
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2155,
+                            "total_tokens": 2839,
+                            "completion_tokens": 684,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "faq",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:36:44+00:00"
+    },
+    "proposal_62ea1bd62b661afd": {
+        "id": "proposal_62ea1bd62b661afd",
+        "projectId": "project_bc6f8990bf774098",
+        "workflowInstanceId": "workflow_966cee3e222e2c43",
+        "stepRunId": "steprun_132c893c083cb7ee",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_cc3837561bbe6792",
+            "type": "pptx_presentation",
+            "path": "cb560346-0377-4d4b-8811-491971617d5b",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4674,
+                "ilias_obj_id": 28516,
+                "parent_ref_id": 4660,
+                "filename": "presentation.pptx",
+                "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileCount": 1,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4674",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:36:54+00:00"
+    },
+    "proposal_aaaf9b6d18d0dd8a": {
+        "id": "proposal_aaaf9b6d18d0dd8a",
+        "projectId": "project_67c86c8917812b2b",
+        "workflowInstanceId": "workflow_bfed97e812b6e113",
+        "stepRunId": "steprun_1d3869cc9888fb4d",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "faq",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+            "summary": "Frequently Asked Questions about the DataHawk Plugin for BASE3 Framework",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "faq",
+                    "title": "What is the DataHawk Plugin for BASE3 Framework?",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read more about the DataHawk Plugin features."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "faq",
+                    "title": "What features does the DataHawk Plugin offer?",
+                    "body": "The DataHawk Plugin offers a schema-driven query system, JSON query format compiled by MysqlReportQueryCompiler, support for various element/expression types, automatic join planning, and aliasing support for stable column names in results.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Explore the supported element/expression types."
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "How does the DataHawk Plugin handle sensitivity and data protection?",
+                    "body": "Tables and fields can be marked as sensitive in schema metadata. Compilation marks sensitivity in compiled statements, and QueryResult includes per-column sensitivity flags.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Learn more about schema management and query execution."
+                    }
+                },
+                {
+                    "id": "section_4",
+                    "template": "faq",
+                    "title": "What query types are supported by the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin supports SELECT, INSERT, DELETE, and TRANSACTION query types. Each type has its own specific structure and use case.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Review examples of each query type."
+                    }
+                },
+                {
+                    "id": "section_5",
+                    "template": "faq",
+                    "title": "What exporters are available in the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin offers several exporters including CSV, JSON, HTML, HTML-Mail, and Excel-HTML, each suited for different use cases such as data analysis, API integration, web preview, email delivery, and Excel download.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Discover the roadmap and future ideas for the DataHawk Plugin."
+                    }
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2155,
+                            "total_tokens": 2777,
+                            "completion_tokens": 622,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "faq",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:41:14+00:00"
+    },
+    "proposal_2b14800fa7139b69": {
+        "id": "proposal_2b14800fa7139b69",
+        "projectId": "project_67c86c8917812b2b",
+        "workflowInstanceId": "workflow_bfed97e812b6e113",
+        "stepRunId": "steprun_1734e9f9fc7a16db",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_9613f6327ec381b2",
+            "type": "pptx_presentation",
+            "path": "7bf5cab3-d243-4adf-a498-9b2d50c9a770",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4675,
+                "ilias_obj_id": 28517,
+                "parent_ref_id": 4660,
+                "filename": "presentation.pptx",
+                "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileCount": 1,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4675",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:41:22+00:00"
+    },
+    "proposal_d59f403c3ecd56c7": {
+        "id": "proposal_d59f403c3ecd56c7",
+        "projectId": "project_d93f98206634e83e",
+        "workflowInstanceId": "workflow_281ebf2ac224f431",
+        "stepRunId": "steprun_09a58d7d7c82d7c6",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "faq",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework: FAQ",
+            "summary": "Frequently Asked Questions about the DataHawk Plugin for BASE3 Framework, covering its features, query syntax, and more.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "faq",
+                    "title": "What is the DataHawk Plugin for BASE3 Framework?",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read more about the DataHawk Plugin and its features."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "faq",
+                    "title": "What features does the DataHawk Plugin support?",
+                    "body": "The DataHawk Plugin supports a schema-driven query system, JSON query format compiled by MysqlReportQueryCompiler, various element/expression types, automatic join planning, aliasing support, sensitivity and data protection, schema management, query execution, transactions, and more.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Explore the various features supported by the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "How does the DataHawk Plugin handle query syntax?",
+                    "body": "The DataHawk Plugin uses a structured JSON format for query syntax. For example, a SELECT query includes fields, from, where, order_by, and limit. INSERT, DELETE, and TRANSACTION queries have their own specific structures.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Learn about the query syntax used by the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_4",
+                    "template": "faq",
+                    "title": "What exporters are available in the DataHawk Plugin?",
+                    "body": "The DataHawk Plugin supports several exporters including CSV (CsvReportExporter), JSON (JsonReportExporter), HTML (HtmlReportExporter), HTML-Mail (HtmlTableReportExporter), and Excel-HTML (ExcelHtmlReportExporter).",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Discover the different exporters available in the DataHawk Plugin."
+                    }
+                },
+                {
+                    "id": "section_5",
+                    "template": "faq",
+                    "title": "What are some future developments planned for the DataHawk Plugin?",
+                    "body": "Future developments for the DataHawk Plugin include export filtering/masking based on sensitivity, UI-driven schema visualizations, caching and pagination strategies, and parameterized statements for write queries.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Find out about the roadmap and future ideas for the DataHawk Plugin."
+                    }
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2155,
+                            "total_tokens": 2842,
+                            "completion_tokens": 687,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "faq",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:44:41+00:00"
+    },
+    "proposal_6d5dd12f7dc0be44": {
+        "id": "proposal_6d5dd12f7dc0be44",
+        "projectId": "project_d93f98206634e83e",
+        "workflowInstanceId": "workflow_281ebf2ac224f431",
+        "stepRunId": "steprun_6ae240bc621479db",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_7e87647d4e55f7d8",
+            "type": "pptx_presentation",
+            "path": "a6d8ce84-36ce-4394-aab7-fae61d557cda",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4676,
+                "ilias_obj_id": 28518,
+                "parent_ref_id": 4660,
+                "filename": "presentation.pptx",
+                "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileCount": 1,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4676",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:44:48+00:00"
+    },
+    "proposal_36064a1e3b99aa2e": {
+        "id": "proposal_36064a1e3b99aa2e",
+        "projectId": "project_84e75cfed1eb1adf",
+        "workflowInstanceId": "workflow_01b6fdbedea25c36",
+        "stepRunId": "steprun_2e4905910df7b586",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "short_overview",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework",
+            "summary": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "short_overview",
+                    "title": "Features",
+                    "body": "DataHawk offers a schema-driven query system with a JSON query format compiled by MysqlReportQueryCompiler. It supports various element/expression types such as field references, functions, window functions, operations, case statements, subqueries, and scalars. It also provides automatic join planning and aliasing support for stable column names in results.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": ""
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "short_overview",
+                    "title": "Sensitivity and Data Protection",
+                    "body": "Tables and fields can be marked as sensitive in schema metadata. Compilation marks sensitivity in compiled statements, and QueryResult includes per-column sensitivity flags.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": ""
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "short_overview",
+                    "title": "Query Execution",
+                    "body": "DataHawk executes queries via IQueryService, using BASE3 IDatabase for execution. It supports integrity validation for select results and provides write query metadata such as affected rows and insert id.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": ""
+                    }
+                },
+                {
+                    "id": "section_4",
+                    "template": "short_overview",
+                    "title": "Transactions",
+                    "body": "DataHawk supports atomic multi-step operations using a transaction query type. If any failure occurs, the transaction is rolled back, and errors are propagated as exceptions.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": ""
+                    }
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2166,
+                            "total_tokens": 2542,
+                            "completion_tokens": 376,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "short_overview",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:47:41+00:00"
+    },
+    "proposal_3a176ee107683c42": {
+        "id": "proposal_3a176ee107683c42",
+        "projectId": "project_84e75cfed1eb1adf",
+        "workflowInstanceId": "workflow_01b6fdbedea25c36",
+        "stepRunId": "steprun_8fb1d6a12c5804f9",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_dcb468c975e37730",
+            "type": "pptx_presentation",
+            "path": "dda9eb1f-74aa-4649-be2c-56d8a8fec99a",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4677,
+                "ilias_obj_id": 28519,
+                "parent_ref_id": 4660,
+                "filename": "presentation.pptx",
+                "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileCount": 1,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4677",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:47:48+00:00"
+    },
+    "proposal_73a9fefb0be6069e": {
+        "id": "proposal_73a9fefb0be6069e",
+        "projectId": "project_e020b461febf3562",
+        "workflowInstanceId": "workflow_0f427d1cd62f18d6",
+        "stepRunId": "steprun_a260c7a7958f5111",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "micro_learning",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework",
+            "summary": "An overview of the DataHawk plugin, its features, and usage within the BASE3 framework.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "short_overview",
+                    "title": "Introduction to DataHawk",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read through the introduction to understand the basic functionality of DataHawk."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "checklist",
+                    "title": "Key Features",
+                    "body": "DataHawk offers several key features:",
+                    "interaction": {
+                        "type": "reflection",
+                        "prompt": "Reflect on how these features might be useful in your projects."
+                    },
+                    "items": [
+                        "Schema-driven query system",
+                        "JSON query format compiled by MysqlReportQueryCompiler",
+                        "Support for various element/expression types",
+                        "Aliasing support for stable column names",
+                        "Sensitivity and data protection",
+                        "Schema management",
+                        "Query execution and integrity validation",
+                        "Support for write queries and transactions"
+                    ]
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "Query Syntax Examples",
+                    "body": "Here are some examples of query syntax used in DataHawk:",
+                    "interaction": {
+                        "type": "question",
+                        "prompt": "Which query type do you think you will use most frequently?"
+                    },
+                    "items": [
+                        {
+                            "question": "What is the basic structure of a SELECT query?",
+                            "answer": "{ \"type\": \"select\", \"fields\": [...], \"from\": \"table_name\", ... }"
+                        },
+                        {
+                            "question": "How do you perform an INSERT operation?",
+                            "answer": "{ \"type\": \"insert\", \"table\": \"table_name\", \"values\": [...] }"
+                        },
+                        {
+                            "question": "What does a DELETE query look like?",
+                            "answer": "{ \"type\": \"delete\", \"table\": \"table_name\", \"where\": {...} }"
+                        }
+                    ]
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2174,
+                            "total_tokens": 2726,
+                            "completion_tokens": 552,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "micro_learning",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:52:51+00:00"
+    },
+    "proposal_3a3f3a690d79cbea": {
+        "id": "proposal_3a3f3a690d79cbea",
+        "projectId": "project_ef220c9ae0ad0845",
+        "workflowInstanceId": "workflow_85eecb4294f782c9",
+        "stepRunId": "steprun_0740ee3329ffc5ad",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "micro_learning",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework",
+            "summary": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "short_overview",
+                    "title": "Introduction to DataHawk",
+                    "body": "DataHawk is a plugin for the BASE3 framework that provides a schema-driven query engine. It allows for structured JSON queries that are compiled to SQL and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read through the introduction to understand the basic functionality of DataHawk."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "micro_learning",
+                    "title": "Key Features",
+                    "body": "DataHawk supports various query types including SELECT, INSERT, DELETE, and TRANSACTION. It also features automatic join planning, sensitivity and data protection, and schema management.",
+                    "interaction": {
+                        "type": "reflection",
+                        "prompt": "Reflect on how these features might enhance your data management tasks."
+                    }
+                },
+                {
+                    "id": "section_3",
+                    "template": "checklist",
+                    "title": "Query Syntax",
+                    "body": "DataHawk uses a structured JSON format for queries. Here are some examples of different query types:",
+                    "interaction": {
+                        "type": "question",
+                        "prompt": "Which query type do you think you will use most frequently and why?"
+                    },
+                    "items": [
+                        "SELECT: Used for retrieving data from the database.",
+                        "INSERT: Used for adding new data into the database.",
+                        "DELETE: Used for removing data from the database.",
+                        "TRANSACTION: Used for executing multiple queries atomically."
+                    ]
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2174,
+                            "total_tokens": 2607,
+                            "completion_tokens": 433,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "micro_learning",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:55:35+00:00"
+    },
+    "proposal_13456d0bd59c7c2b": {
+        "id": "proposal_13456d0bd59c7c2b",
+        "projectId": "project_9aa25576f47e5a16",
+        "workflowInstanceId": "workflow_52b141ea67a2071a",
+        "stepRunId": "steprun_0bd6b7ba7d0189d0",
+        "type": "html_micro_module",
+        "title": "DataHawk Plugin for BASE3 Framework",
+        "content": {
+            "generatorType": "html_micro_module",
+            "generatorTemplate": "micro_learning",
+            "language": "en",
+            "title": "DataHawk Plugin for BASE3 Framework",
+            "summary": "An overview of the DataHawk plugin, its features, and usage within the BASE3 framework.",
+            "sections": [
+                {
+                    "id": "section_1",
+                    "template": "short_overview",
+                    "title": "Introduction to DataHawk",
+                    "body": "The DataHawk plugin extends the BASE3 framework with a schema-driven query engine for reporting and data access. Queries are defined as structured JSON arrays, compiled to SQL, and executed through the BASE3 IDatabase abstraction.",
+                    "interaction": {
+                        "type": "reading",
+                        "prompt": "Read through the introduction to understand the basic functionality of DataHawk."
+                    }
+                },
+                {
+                    "id": "section_2",
+                    "template": "checklist",
+                    "title": "Key Features",
+                    "body": "DataHawk offers several key features:",
+                    "interaction": {
+                        "type": "reflection",
+                        "prompt": "Reflect on how these features might be useful in your projects."
+                    },
+                    "items": [
+                        "Schema-driven query system",
+                        "JSON query format compiled by MysqlReportQueryCompiler",
+                        "Support for various element/expression types",
+                        "Aliasing support for stable column names",
+                        "Sensitivity and data protection",
+                        "Schema management",
+                        "Query execution and integrity validation",
+                        "Support for write queries and transactions"
+                    ]
+                },
+                {
+                    "id": "section_3",
+                    "template": "faq",
+                    "title": "Query Syntax Examples",
+                    "body": "Here are some examples of query syntax for different operations:",
+                    "interaction": {
+                        "type": "question",
+                        "prompt": "Which query type do you think you will use most frequently?"
+                    },
+                    "items": [
+                        {
+                            "question": "What is the basic structure of a SELECT query?",
+                            "answer": "{ \"type\": \"select\", \"fields\": [...], \"from\": \"table_name\", ... }"
+                        },
+                        {
+                            "question": "How do you perform an INSERT operation?",
+                            "answer": "{ \"type\": \"insert\", \"table\": \"table_name\", \"values\": [...], ... }"
+                        },
+                        {
+                            "question": "What does a DELETE query look like?",
+                            "answer": "{ \"type\": \"delete\", \"table\": \"table_name\", \"where\": {...}, ... }"
+                        }
+                    ]
+                }
+            ],
+            "exportHints": {
+                "preferredExporter": "contentforgehtmlpackageexporter",
+                "scormReadyLater": true
+            },
+            "review": {
+                "status": "draft",
+                "version": 1,
+                "latestFeedbackApplied": false,
+                "latestFeedback": "",
+                "feedbackContext": {
+                    "selectedSectionIndex": null,
+                    "selectedSectionIndexes": [],
+                    "selectedSectionTitle": "",
+                    "selectedSectionTitles": [],
+                    "selectedSection": [],
+                    "selectedSections": [],
+                    "currentProposal": [],
+                    "userFeedback": ""
+                },
+                "generator": "ai",
+                "appliedWithoutAi": false,
+                "ai": {
+                    "ok": true,
+                    "provider": "contentforgemistralchataiprovider",
+                    "model": "mistral-medium-2508",
+                    "usedFallback": false,
+                    "errors": [],
+                    "warnings": [],
+                    "metadata": {
+                        "httpStatus": 200,
+                        "usage": {
+                            "prompt_tokens": 2174,
+                            "total_tokens": 2727,
+                            "completion_tokens": 553,
+                            "prompt_tokens_details": {
+                                "cached_tokens": 0
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "status": "accepted",
+        "meta": {
+            "handler": "contentforgehtmlmicromodulestephandler",
+            "materialCount": 1,
+            "language": "en",
+            "generatorTemplate": "micro_learning",
+            "deterministic": false,
+            "aiUsed": true,
+            "aiProvider": "contentforgemistralchataiprovider",
+            "aiModel": "mistral-medium-2508",
+            "aiErrors": []
+        },
+        "createdAt": "2026-06-04T23:58:01+00:00"
+    },
+    "proposal_ce0be24298c780d0": {
+        "id": "proposal_ce0be24298c780d0",
+        "projectId": "project_9aa25576f47e5a16",
+        "workflowInstanceId": "workflow_52b141ea67a2071a",
+        "stepRunId": "steprun_9147e414ecbedcd1",
+        "type": "export_report",
+        "title": "Export result",
+        "content": {
+            "id": "delivered_f969239b4d80d074",
+            "type": "pptx_presentation",
+            "path": "b8663cac-f1db-4eab-bad0-bb608bdfe589",
+            "url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+            "meta": {
+                "target": "contentforgeiliasfileexporttarget",
+                "ilias_ref_id": 4678,
+                "ilias_obj_id": 28520,
+                "parent_ref_id": 4660,
+                "filename": "presentation.pptx",
+                "mimeType": "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                "fileCount": 1,
+                "file_url": "https://ddahme.qualitus.net/reporting10/goto.php/file/4678",
+                "return_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "redirect_url": "https://ddahme.qualitus.net/reporting10/goto.php/cat/4660",
+                "contentForgeAutoRedirect": true,
+                "autoRedirect": true
+            }
+        },
+        "status": "pending",
+        "meta": {
+            "handler": "contentforgeexportstephandler"
+        },
+        "createdAt": "2026-06-04T23:58:07+00:00"
+    }
+}

@@ -1,6 +1,6 @@
 # ContentForge Documentation
 
-Version: 0.1.26
+Version: 0.1.28
 
 ## Main display
 
@@ -165,8 +165,12 @@ Current export templates:
 - `html_package` via `ContentForgeHtmlPackageExporter`
 - `scorm12` via `ContentForgeScorm12Exporter`
 - `pdf_document` via `ContentForgePdfDocumentExporter`
+- `docx_document` via `ContentForgeDocxDocumentExporter`
+- `pptx_presentation` via `ContentForgePptxPresentationExporter`
 
-The SCORM and PDF exporters are MVP implementations. SCORM creates a minimal SCORM 1.2 package with `imsmanifest.xml`, `index.html` and a small runtime driver. PDF creates a simple text-based PDF document for first end-to-end validation.
+SCORM, PDF, DOCX and PPTX exporters are MVP implementations. SCORM creates a minimal SCORM 1.2 package with `imsmanifest.xml`, `index.html` and a small runtime driver. PDF creates a simple text-based PDF document. DOCX and PPTX create minimal OpenXML files for interoperability validation.
+
+Additional exporters from other BASE3 plugins are discovered via `IClassMap` when they implement `IContentForgeExporter`. Unknown exporter templates use the exporter technical name as their template/type key.
 
 
 ## Export delivery

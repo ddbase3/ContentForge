@@ -32,28 +32,32 @@ class ContentForgePdfDocumentExporter implements IContentForgeExporter {
 	public function export(ContentForgeExportRequest $request, ContentForgeWorkflowContext $context): ContentForgeExportResult {
 		$content = $this->getLatestRevisionContent($context);
 		$title = (string) ($content['title'] ?? $context->project->title);
+		$language = $this->normalizeLanguageCode((string) ($content['language'] ?? 'en'));
+		$manifest = [
+			'title' => $title,
+			'type' => 'pdf_document',
+			'language' => $language,
+			'generatorTemplate' => (string) ($content['generatorTemplate'] ?? 'micro_learning'),
+			'exportTemplate' => 'pdf_document',
+			'sectionTemplates' => $this->collectSectionTemplates($content),
+			'createdAt' => gmdate('c'),
+			'sourceProjectId' => $context->project->id
+		];
 
 		return new ContentForgeExportResult(
 			ContentForgeProject::newId('export'),
 			'pdf_document',
 			$title,
 			[
-				'document.pdf' => $this->buildPdf($title, $content),
-				'manifest.json' => json_encode([
-					'title' => $title,
-					'type' => 'pdf_document',
-					'language' => $this->normalizeLanguageCode((string) ($content['language'] ?? 'en')),
-					'generatorTemplate' => (string) ($content['generatorTemplate'] ?? 'micro_learning'),
-					'exportTemplate' => 'pdf_document',
-					'sectionTemplates' => $this->collectSectionTemplates($content),
-					'createdAt' => gmdate('c'),
-					'sourceProjectId' => $context->project->id
-				], JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+				'document.pdf' => $this->buildPdf($title, $content)
 			],
 			[
 				'projectId' => $context->project->id,
+				'primaryFile' => 'document.pdf',
 				'revisionCount' => count($context->revisions),
-				'exportTemplate' => 'pdf_document'
+				'exportTemplate' => 'pdf_document',
+				'manifest' => $manifest,
+				'manifestJson' => json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
 			]
 		);
 	}

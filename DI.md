@@ -1,6 +1,6 @@
 # ContentForge DI
 
-Version: 0.1.26
+Version: 0.1.28
 
 ## Host services expected from BASE3
 
@@ -117,3 +117,22 @@ contentforgeexportdownloadservice
 ```
 
 `contentforgeexportdownloadservice` is used by the default download export target and should be linkable through BASE3 `ILinkTargetService`.
+
+## Cross-plugin export targets
+
+`ContentForgeExportTargetRegistry` first checks the locally wired targets from `ContentForgePlugin::init()`. If the configured target name is not local, it resolves the target through BASE3 `IClassMap`:
+
+```php
+$classMap->getInstanceByInterfaceName(
+	IContentForgeExportTarget::class,
+	'contentforgeiliasfileexporttarget'
+);
+```
+
+This allows host plugins to provide their own delivery or placement targets without modifying ContentForge.
+
+The target's `getName()` value must follow the BASE3 convention: lowercase class name.
+
+## Cross-plugin exporter discovery
+
+`IContentForgeExporterRegistry` uses `IClassMap` to discover `IContentForgeExporter` implementations outside the ContentForge plugin. This is required for customer-specific exporters and host-specific template exporters. Technical names follow the BASE3 convention: `getName()` returns the lowercase class name.

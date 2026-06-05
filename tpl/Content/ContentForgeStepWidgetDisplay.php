@@ -2,7 +2,7 @@
 	$rootId = uniqid('contentforgeStepWidget_', false);
 	$showStatus = !empty($this->_['show_status']);
 	$showDebug = !empty($this->_['show_debug']);
-	$assetVersion = '026';
+	$assetVersion = '028';
 ?>
 
 <style>
@@ -170,6 +170,8 @@
 						<option value="html_package"<?php echo ($this->_['export_template'] ?? '') === 'html_package' ? ' selected' : ''; ?>>HTML package</option>
 						<option value="scorm12"<?php echo ($this->_['export_template'] ?? '') === 'scorm12' ? ' selected' : ''; ?>>SCORM 1.2 package</option>
 						<option value="pdf_document"<?php echo ($this->_['export_template'] ?? '') === 'pdf_document' ? ' selected' : ''; ?>>PDF document</option>
+						<option value="docx_document"<?php echo ($this->_['export_template'] ?? '') === 'docx_document' ? ' selected' : ''; ?>>DOCX document</option>
+						<option value="pptx_presentation"<?php echo ($this->_['export_template'] ?? '') === 'pptx_presentation' ? ' selected' : ''; ?>>PPTX presentation</option>
 					</select>
 				</div>
 <?php } ?>
@@ -279,6 +281,7 @@ function initContentForgeStepWidget_<?php echo str_replace('-', '_', $rootId); ?
 	const config = {
 		serviceUrl: <?php echo json_encode((string) $this->_['service_url'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		generatorType: <?php echo json_encode((string) $this->_['generator_type'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
+		exportTemplate: <?php echo json_encode((string) ($this->_['export_template'] ?? ''), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		exportTarget: <?php echo json_encode((string) $this->_['export_target'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		exportTargetConfig: <?php echo json_encode($this->_['export_target_config'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		showDebug: <?php echo $showDebug ? 'true' : 'false'; ?>,

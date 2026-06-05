@@ -41,9 +41,11 @@ class ContentForgeFileStorageExportTarget implements IContentForgeExportTarget {
 		$baseName = preg_replace('/[^a-z0-9_-]+/i', '-', strtolower($result->title)) ?: 'contentforge-export';
 		$baseName = trim($baseName, '-_') ?: 'contentforge-export';
 
-		if ($result->type === 'pdf_document' && isset($result->files['document.pdf'])) {
-			$path = $dir . '/' . substr($baseName, 0, 80) . '-' . date('Ymd-His') . '.pdf';
-			file_put_contents($path, (string) $result->files['document.pdf']);
+		$singleFile = $this->getDirectExportFile($result);
+
+		if ($singleFile !== null) {
+			$path = $dir . '/' . substr($baseName, 0, 80) . '-' . date('Ymd-His') . '.' . $singleFile['extension'];
+			file_put_contents($path, (string) $singleFile['content']);
 		} else {
 			$path = $dir . '/' . substr($baseName, 0, 80) . '-' . date('Ymd-His') . '.zip';
 
@@ -72,6 +74,50 @@ class ContentForgeFileStorageExportTarget implements IContentForgeExportTarget {
 			'',
 			['fileCount' => count($result->files), 'target' => self::getName()]
 		);
+	}
+
+	/**
+	 * Return a generated single-file office/document export directly.
+	 *
+	 * DOCX and PPTX are internally ZIP-based formats, but they are final user
+	 * files and must not be wrapped in another ZIP archive.
+	 */
+	protected function getDirectExportFile(ContentForgeExportResult $result): ?array {
+		$preferredNames = [
+			'pdf_document' => ['document.pdf'],
+			'docx_document' => ['document.docx'],
+			'pptx_presentation' => ['presentation.pptx']
+		];
+
+		foreach (($preferredNames[$result->type] ?? []) as $name) {
+			if (!array_key_exists($name, $result->files)) {
+				continue;
+			}
+
+			$extension = strtolower((string) pathinfo($name, PATHINFO_EXTENSION));
+
+			if (in_array($extension, ['pdf', 'docx', 'pptx'], true)) {
+				return [
+					'name' => $name,
+					'extension' => $extension,
+					'content' => $result->files[$name]
+				];
+			}
+		}
+
+		foreach ($result->files as $name => $content) {
+			$extension = strtolower((string) pathinfo((string) $name, PATHINFO_EXTENSION));
+
+			if (in_array($extension, ['pdf', 'docx', 'pptx'], true)) {
+				return [
+					'name' => (string) $name,
+					'extension' => $extension,
+					'content' => $content
+				];
+			}
+		}
+
+		return null;
 	}
 
 	protected function getExportPath(ContentForgeExportRequest $request): string {

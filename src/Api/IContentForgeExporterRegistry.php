@@ -17,4 +17,6 @@ interface IContentForgeExporterRegistry {
 	public function getExporter(string $name): ?IContentForgeExporter;
 	/** @return IContentForgeExporter[] */
 	public function getExporters(): array;
+	/** @return array<int,array<string,mixed>> */
+	public function getExportOptions(): array;
 }

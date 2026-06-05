@@ -30,8 +30,34 @@ class ContentForgeExportTargetRegistry implements IContentForgeExportTargetRegis
 	}
 
 	public function getTarget(string $name): ?IContentForgeExportTarget {
-		foreach ($this->getTargets() as $target) {
-			if ($target::getName() === $name) {
+		$name = $this->normalizeName($name);
+
+		if ($name === '') {
+			return null;
+		}
+
+		$target = $this->getLocalTarget($name);
+
+		if ($target !== null) {
+			return $target;
+		}
+
+		return $this->getClassMapTargetByName($name);
+	}
+
+	public function getTargets(): array {
+		$targets = array_merge($this->localTargets, $this->getClassMapTargets());
+
+		return $this->uniqueTargets($targets);
+	}
+
+	protected function getLocalTarget(string $name): ?IContentForgeExportTarget {
+		foreach ($this->localTargets as $target) {
+			if (!$target instanceof IContentForgeExportTarget) {
+				continue;
+			}
+
+			if ($this->normalizeName($target::getName()) === $name) {
 				return $target;
 			}
 		}
@@ -39,11 +65,17 @@ class ContentForgeExportTargetRegistry implements IContentForgeExportTargetRegis
 		return null;
 	}
 
-	public function getTargets(): array {
-		$targets = $this->getClassMapTargets();
-		$targets = array_merge($this->localTargets, $targets);
+	protected function getClassMapTargetByName(string $name): ?IContentForgeExportTarget {
+		try {
+			$target =& $this->classMap->getInstanceByInterfaceName(
+				IContentForgeExportTarget::class,
+				$name
+			);
 
-		return $this->uniqueTargets($targets);
+			return $target instanceof IContentForgeExportTarget ? $target : null;
+		} catch (\Throwable) {
+			return null;
+		}
 	}
 
 	protected function getClassMapTargets(): array {
@@ -64,9 +96,9 @@ class ContentForgeExportTargetRegistry implements IContentForgeExportTargetRegis
 				continue;
 			}
 
-			$name = $target::getName();
+			$name = $this->normalizeName($target::getName());
 
-			if (isset($result[$name])) {
+			if ($name === '' || isset($result[$name])) {
 				continue;
 			}
 
@@ -74,5 +106,9 @@ class ContentForgeExportTargetRegistry implements IContentForgeExportTargetRegis
 		}
 
 		return array_values($result);
+	}
+
+	protected function normalizeName(string $name): string {
+		return strtolower(trim($name));
 	}
 }

@@ -41,8 +41,10 @@ use ContentForge\Api\IContentForgeWorkflowNodeHandlerRegistry;
 use ContentForge\Api\IContentForgeWorkflowRunnerService;
 use ContentForge\AiProvider\ContentForgeDummyAiProvider;
 use ContentForge\AiProvider\ContentForgeMistralChatAiProvider;
+use ContentForge\Exporter\ContentForgeDocxDocumentExporter;
 use ContentForge\Exporter\ContentForgeHtmlPackageExporter;
 use ContentForge\Exporter\ContentForgePdfDocumentExporter;
+use ContentForge\Exporter\ContentForgePptxPresentationExporter;
 use ContentForge\Exporter\ContentForgeScorm12Exporter;
 use ContentForge\ExportTarget\ContentForgeDownloadExportTarget;
 use ContentForge\ExportTarget\ContentForgeFileStorageExportTarget;
@@ -159,7 +161,9 @@ class ContentForgePlugin implements IPlugin {
 				[
 					new ContentForgeHtmlPackageExporter(),
 					new ContentForgeScorm12Exporter(),
-					new ContentForgePdfDocumentExporter()
+					new ContentForgePdfDocumentExporter(),
+					new ContentForgeDocxDocumentExporter(),
+					new ContentForgePptxPresentationExporter()
 				]
 			), IContainer::SHARED)
 

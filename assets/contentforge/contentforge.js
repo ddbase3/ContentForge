@@ -78,6 +78,10 @@
 			rememberTemplateDefinitions(root, payload.sectionTemplates);
 		}
 
+		if (payload.capabilities && Array.isArray(payload.capabilities.exportOptions)) {
+			updateExportOptions(root, payload.capabilities.exportOptions);
+		}
+
 		if (payload.project && payload.project.id) {
 			setState(root, 'projectId', payload.project.id);
 		}
@@ -172,6 +176,46 @@
 		return JSON.parse(JSON.stringify(value || {}));
 	}
 
+
+
+	function updateExportOptions(root, options) {
+		const select = field(root, 'exportTemplate');
+		if (!select || !Array.isArray(options) || options.length === 0) return;
+
+		const current = root.__contentForgePreferredExportTemplate || select.value || 'html_package';
+		const seen = {};
+		const normalized = [];
+
+		options.forEach(function(option) {
+			if (!option || !option.template) return;
+			const value = String(option.template);
+			if (seen[value]) return;
+			seen[value] = true;
+			normalized.push({value: value, label: String(option.label || option.exporter || value)});
+		});
+
+		if (!seen.html_package) normalized.unshift({value: 'html_package', label: 'HTML package'});
+
+		select.innerHTML = '';
+		normalized.forEach(function(option) {
+			const element = document.createElement('option');
+			element.value = option.value;
+			element.textContent = option.label;
+			select.appendChild(element);
+		});
+
+		select.value = seen[current] ? current : (select.querySelector('option') ? select.querySelector('option').value : 'html_package');
+		root.__contentForgePreferredExportTemplate = '';
+	}
+
+	async function loadCapabilities(root, config) {
+		try {
+			const payload = await request(config, {action: 'capabilities'});
+			rememberPayloadState(root, payload);
+		} catch (error) {
+			// Capability loading is optional. Generation must still work with rendered defaults.
+		}
+	}
 
 	function syncMaterialRowsWithPayload(root, materials) {
 		const rows = Array.from(root.querySelectorAll('[data-cf-material-item]'));
@@ -1784,10 +1828,12 @@
 	}
 
 	function init(root, config) {
+		root.__contentForgePreferredExportTemplate = config.exportTemplate || '';
 		rememberTemplateDefinitions(root, config.sectionTemplates || null);
 		setupMaterialRows(root, config);
 		setupDragAndDrop(root, config);
 		updateActionState(root);
+		loadCapabilities(root, config);
 
 		root.addEventListener('click', async function(event) {
 			const button = event.target.closest('[data-contentforge-action]');

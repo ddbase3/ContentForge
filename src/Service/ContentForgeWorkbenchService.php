@@ -1017,8 +1017,9 @@ class ContentForgeWorkbenchService implements IOutput {
 
 	protected function normalizeExportTemplate(string $value): string {
 		$value = strtolower(trim($value));
+		$value = preg_replace('/[^a-z0-9._-]+/', '', $value) ?? '';
 
-		return in_array($value, ['html_package', 'scorm12', 'pdf_document'], true) ? $value : 'html_package';
+		return $value !== '' ? $value : 'html_package';
 	}
 
 	protected function normalizeExportTarget(string $value): string {
@@ -1124,17 +1125,47 @@ class ContentForgeWorkbenchService implements IOutput {
 	}
 
 	protected function logError(string $message, array $context, array $storage): void {
-		if ($this->logger === null) {
+		$logMessage = $this->buildLogMessage($message, $context, $storage);
+		$logged = false;
+
+		if ($this->logger !== null) {
+			try {
+				$logged = $this->logger->log('contentforge', '[error] ' . $logMessage);
+			} catch (\Throwable $e) {
+				$logMessage .= ' | loggerFailure=' . $e::class . ': ' . $e->getMessage();
+			}
+		}
+
+		if (!$logged) {
+			$this->writeFallbackLog('error', $logMessage);
+		}
+	}
+
+	protected function writeFallbackLog(string $level, string $message): void {
+		$dir = $this->getFallbackLogDir();
+
+		if ($dir === '') {
 			return;
 		}
 
-		$logMessage = $this->buildLogMessage($message, $context, $storage);
-
-		try {
-			$this->logger->log('contentforge', '[error] ' . $logMessage);
-		} catch (\Throwable) {
-			// Scoped logging must never break the user-facing JSON response.
+		if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
+			return;
 		}
+
+		if (!is_writable($dir)) {
+			return;
+		}
+
+		$line = gmdate('c') . "\t" . $level . "\t" . $message . "\n";
+		@file_put_contents($dir . '/contentforge.log', $line, FILE_APPEND | LOCK_EX);
+	}
+
+	protected function getFallbackLogDir(): string {
+		if (defined('DIR_PLUGIN')) {
+			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge/var/log';
+		}
+
+		return dirname(__DIR__, 2) . '/var/log';
 	}
 
 	protected function buildLogMessage(string $message, array $context, array $storage): string {
