@@ -23,6 +23,7 @@ use ContentForge\Api\IContentForgeSectionTemplateRegistry;
 class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 
 	private array $data = [];
+	private array $translations = [];
 
 	public function __construct(
 		private readonly IMvcView $view,
@@ -35,8 +36,15 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 		return 'contentforgestepwidgetdisplay';
 	}
 
+	public function getHelp(): string {
+		$this->loadTranslations();
+
+		return $this->t('help', 'Interactive ContentForge workflow for creating, reviewing and exporting structured content.');
+	}
+
 	public function getOutput(string $out = 'html', bool $final = false): string {
 		$this->view->setPath(DIR_PLUGIN . 'ContentForge');
+		$this->loadTranslations();
 		$this->view->setTemplate('Content/ContentForgeStepWidgetDisplay.php');
 
 		$config = $this->getClientConfig();
@@ -48,6 +56,7 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 		}
 
 		$this->view->assign('resolve', fn($src) => $this->assetResolver->resolve($src));
+		$this->view->assign('translations', $this->translations);
 
 		return $this->view->loadTemplate();
 	}
@@ -57,58 +66,60 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 	}
 
 	public function getSchema(): array {
+		$this->loadTranslations();
+
 		return [
 			'$schema' => 'https://json-schema.org/draft-2020-12/schema',
 			'type' => 'object',
 			'properties' => [
 				'service' => [
 					'type' => 'string',
-					'description' => 'Technical ContentForge widget service name',
+					'description' => $this->t('schema_service', 'Technical ContentForge widget service name'),
 					'default' => 'contentforgeworkbenchservice'
 				],
 				'default_project_title' => [
 					'type' => 'string',
-					'description' => 'Default title used by the first widget screen',
-					'default' => 'ContentForge Test Project'
+					'description' => $this->t('schema_default_project_title', 'Default title used by the first widget screen'),
+					'default' => $this->t('default_project_title', 'ContentForge Test Project')
 				],
 				'default_material' => [
 					'type' => 'string',
-					'description' => 'Optional starter material for demos or embedded examples',
+					'description' => $this->t('schema_default_material', 'Optional starter material for demos or embedded examples'),
 					'default' => ''
 				],
 				'generator_type' => [
 					'type' => 'string',
-					'description' => 'Initial generator type handled by the widget',
+					'description' => $this->t('schema_generator_type', 'Initial generator type handled by the widget'),
 					'default' => 'html_micro_module'
 				],
 				'export_template' => [
 					'type' => 'string',
-					'description' => 'Optional fixed export template. Empty means the user may choose in the review step.',
+					'description' => $this->t('schema_export_template', 'Optional fixed export template. Empty means the user may choose in the review step.'),
 					'default' => ''
 				],
 				'export_template_locked' => [
 					'type' => 'boolean',
-					'description' => 'Hide the export template selector and force export_template.',
+					'description' => $this->t('schema_export_template_locked', 'Hide the export template selector and force export_template.'),
 					'default' => false
 				],
 				'export_target' => [
 					'type' => 'string',
-					'description' => 'Export delivery target name.',
+					'description' => $this->t('schema_export_target', 'Export delivery target name.'),
 					'default' => 'contentforgedownloadexporttarget'
 				],
 				'export_target_config' => [
 					'type' => 'object',
-					'description' => 'Host integration metadata passed to the export target.',
+					'description' => $this->t('schema_export_target_config', 'Host integration metadata passed to the export target.'),
 					'default' => []
 				],
 				'show_status' => [
 					'type' => 'boolean',
-					'description' => 'Legacy option. The side panel is now used for source materials.',
+					'description' => $this->t('schema_show_status', 'Legacy option. The side panel is now used for source materials.'),
 					'default' => false
 				],
 				'show_debug' => [
 					'type' => 'boolean',
-					'description' => 'Show collapsible technical debug data in the side panel',
+					'description' => $this->t('schema_show_debug', 'Show collapsible technical debug data in the side panel'),
 					'default' => false
 				]
 			],
@@ -119,8 +130,8 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 	protected function getClientConfig(): array {
 		$defaults = [
 			'service' => 'contentforgeworkbenchservice',
-			'default_project_title' => 'ContentForge Test Project',
-			'default_material' => 'Short sample text: ContentForge should create a small, reviewable proposal from material. The user reviews only the current step and requests focused changes when needed.',
+			'default_project_title' => $this->t('default_project_title', 'ContentForge Test Project'),
+			'default_material' => $this->t('default_material', 'Short sample text: ContentForge should create a small, reviewable proposal from material. The user reviews only the current step and requests focused changes when needed.'),
 			'generator_type' => 'html_micro_module',
 			'export_template' => '',
 			'export_template_locked' => false,
@@ -159,6 +170,24 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 		]);
 	}
 
+
+
+	private function loadTranslations(): void {
+		$this->view->setPath(DIR_PLUGIN . 'ContentForge');
+		$this->view->loadBricks('Display');
+
+		$translations = $this->view->getBricks('contentforge_step_widget_display');
+		$this->translations = is_array($translations) ? $translations : [];
+	}
+
+	private function t(string $key, string $fallback, mixed ...$values): string {
+		$text = trim((string)($this->translations[$key] ?? ''));
+		if ($text === '') {
+			$text = $fallback;
+		}
+
+		return $values === [] ? $text : vsprintf($text, $values);
+	}
 
 	protected function normalizeExportTemplate(string $value): string {
 		$value = strtolower(trim($value));

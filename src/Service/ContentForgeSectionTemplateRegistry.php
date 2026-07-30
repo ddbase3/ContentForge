@@ -14,6 +14,7 @@
 namespace ContentForge\Service;
 
 use Base3\Api\IClassMap;
+use Base3\Translation\Api\ITranslation;
 use ContentForge\Api\IContentForgeSectionTemplate;
 use ContentForge\Api\IContentForgeSectionTemplateRegistry;
 
@@ -22,6 +23,7 @@ class ContentForgeSectionTemplateRegistry implements IContentForgeSectionTemplat
 	/** @param IContentForgeSectionTemplate[] $localTemplates */
 	public function __construct(
 		private readonly IClassMap $classMap,
+		private readonly ITranslation $translation,
 		private readonly array $localTemplates = []
 	) {}
 
@@ -52,7 +54,7 @@ class ContentForgeSectionTemplateRegistry implements IContentForgeSectionTemplat
 		$result = [];
 
 		foreach ($this->getTemplates() as $template) {
-			$result[$template->getKey()] = [
+			$result[$template->getKey()] = $this->localizeClientDefinition($template->getKey(), [
 				'key' => $template->getKey(),
 				'name' => $template::getName(),
 				'label' => $template->getLabel(),
@@ -63,10 +65,79 @@ class ContentForgeSectionTemplateRegistry implements IContentForgeSectionTemplat
 					'en' => $template->getDefaultContent('en'),
 					'de' => $template->getDefaultContent('de')
 				]
-			];
+			]);
 		}
 
 		return $result;
+	}
+
+
+	private function localizeClientDefinition(string $key, array $definition): array {
+		return match ($key) {
+			'micro_learning' => $this->localizeMicroLearningDefinition($definition),
+			'short_overview' => $this->localizeInformationDefinition($definition),
+			'checklist' => $this->localizeChecklistDefinition($definition),
+			'faq' => $this->localizeFaqDefinition($definition),
+			default => $definition,
+		};
+	}
+
+	private function localizeMicroLearningDefinition(array $definition): array {
+		$definition['label'] = $this->t('section_micro_learning', 'Micro-learning card');
+		$definition['description'] = $this->t('section_micro_learning_description', 'A compact learning card with headline, body text and optional learner prompt.');
+		$definition['preview']['label'] = $this->t('show_section_content', 'Show section content');
+		$definition['schema']['properties']['template']['title'] = $this->t('section_template', 'Section template');
+		$definition['schema']['properties']['title']['title'] = $this->t('headline', 'Headline');
+		$definition['schema']['properties']['body']['title'] = $this->t('text', 'Text');
+		$definition['schema']['properties']['interaction']['title'] = $this->t('learner_prompt', 'Learner prompt');
+		$definition['schema']['properties']['interaction']['properties']['prompt']['title'] = $this->t('learner_prompt', 'Learner prompt');
+		$definition['schema']['properties']['interaction']['properties']['prompt']['description'] = $this->t('learner_prompt_description', 'Optional prompt shown below this card.');
+
+		return $definition;
+	}
+
+	private function localizeInformationDefinition(array $definition): array {
+		$definition['label'] = $this->t('section_information', 'Information section');
+		$definition['description'] = $this->t('section_information_description', 'A plain information section with headline, explanatory text and optional footer.');
+		$definition['preview']['label'] = $this->t('show_overview_text', 'Show overview text');
+		$definition['schema']['properties']['template']['title'] = $this->t('section_template', 'Section template');
+		$definition['schema']['properties']['title']['title'] = $this->t('headline', 'Headline');
+		$definition['schema']['properties']['body']['title'] = $this->t('text', 'Text');
+		$definition['schema']['properties']['footer']['title'] = $this->t('footer', 'Footer');
+		$definition['schema']['properties']['footer']['description'] = $this->t('footer_description', 'Optional small note below the text.');
+
+		return $definition;
+	}
+
+	private function localizeChecklistDefinition(array $definition): array {
+		$definition['label'] = $this->t('section_checklist', 'Checklist section');
+		$definition['description'] = $this->t('section_checklist_description', 'A section with explanatory text and checklist items.');
+		$definition['preview']['label'] = $this->t('show_checklist_details', 'Show checklist details');
+		$definition['schema']['properties']['template']['title'] = $this->t('section_template', 'Section template');
+		$definition['schema']['properties']['title']['title'] = $this->t('headline', 'Headline');
+		$definition['schema']['properties']['body']['title'] = $this->t('intro_text', 'Intro text');
+		$definition['schema']['properties']['items']['title'] = $this->t('checklist_items', 'Checklist items');
+		$definition['schema']['properties']['items']['description'] = $this->t('one_item_per_line', 'One item per line.');
+
+		return $definition;
+	}
+
+	private function localizeFaqDefinition(array $definition): array {
+		$definition['label'] = $this->t('section_faq', 'FAQ section');
+		$definition['description'] = $this->t('section_faq_description', 'A question and answer section with optional follow-up prompt.');
+		$definition['preview']['label'] = $this->t('show_answer', 'Show answer');
+		$definition['schema']['properties']['template']['title'] = $this->t('section_template', 'Section template');
+		$definition['schema']['properties']['title']['title'] = $this->t('question', 'Question');
+		$definition['schema']['properties']['body']['title'] = $this->t('answer', 'Answer');
+		$definition['schema']['properties']['interaction']['title'] = $this->t('follow_up_prompt', 'Follow-up prompt');
+		$definition['schema']['properties']['interaction']['properties']['prompt']['title'] = $this->t('follow_up_prompt', 'Follow-up prompt');
+		$definition['schema']['properties']['interaction']['properties']['prompt']['description'] = $this->t('follow_up_prompt_description', 'Optional prompt shown below this answer.');
+
+		return $definition;
+	}
+
+	private function t(string $key, string $fallback): string {
+		return $this->translation->translate('Display', 'contentforge_step_widget_display', $key, $fallback);
 	}
 
 	public function getDefaultContent(string $key, string $language = 'en'): array {

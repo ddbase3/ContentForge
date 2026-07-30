@@ -16,6 +16,7 @@ namespace ContentForge\Service;
 use Base3\Api\IOutput;
 use Base3\Api\IRequest;
 use Base3\Logger\Api\ILogger;
+use Base3\Translation\Api\ITranslation;
 use ContentForge\Api\IContentForgeCapabilityService;
 use ContentForge\Api\IContentForgeJsonStorageService;
 use ContentForge\Api\IContentForgeMaterialIntakeService;
@@ -46,6 +47,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		private readonly IContentForgeSectionTemplateRegistry $sectionTemplateRegistry,
 		private readonly IContentForgeJsonStorageService $storage,
 		private readonly IRequest $request,
+		private readonly ITranslation $translation,
 		private readonly ?ILogger $logger = null
 	) {}
 
@@ -102,7 +104,16 @@ class ContentForgeWorkbenchService implements IOutput {
 		$payload = $this->decoratePayload($payload, $action);
 		$json = json_encode($payload, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
-		return $json !== false ? $json : '{"ok":false,"error":"ContentForge could not encode JSON response."}';
+		if ($json !== false) {
+			return $json;
+		}
+
+		$fallback = json_encode([
+			'ok' => false,
+			'error' => $this->t('service_json_encode_failed', 'ContentForge could not encode the JSON response.')
+		], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+		return $fallback !== false ? $fallback : '{"ok":false}';
 	}
 
 	protected function snapshot(): array {
@@ -117,18 +128,18 @@ class ContentForgeWorkbenchService implements IOutput {
 	}
 
 	protected function startWidget(): array {
-		$title = $this->input('title', 'ContentForge Test Project');
+		$title = $this->input('title', $this->t('default_project_title', 'ContentForge Test Project'));
 		$generatorTemplate = $this->normalizeGeneratorTemplate($this->input('generatorTemplate', 'micro_learning'));
 		$targetSectionCount = $this->normalizeTargetSectionCount($this->input('targetSectionCount', 'auto'));
 		$materialInputs = $this->getWidgetMaterialInputs();
 
 		if ($materialInputs === []) {
-			return $this->fail('At least one material item is required.', [
+			return $this->fail($this->t('service_material_required', 'At least one material item is required.'), [
 				'expectedField' => 'materialsJson'
 			]);
 		}
 
-		$project = $this->projectService->createProject($title, 'Created from ContentForge Step Widget.');
+		$project = $this->projectService->createProject($title, $this->t('service_project_created_widget', 'Created from ContentForge Step Widget.'));
 		$instance = $this->runnerService->startWorkflow($project, $this->definitionService->getDefaultDefinition());
 		$generationMeta = [
 			'generatorTemplate' => $generatorTemplate,
@@ -154,7 +165,7 @@ class ContentForgeWorkbenchService implements IOutput {
 					$materials[] = $this->materialService->createTextMaterial($project->id, $input['name'], $input['content'], $meta);
 				}
 			} catch (\Throwable $e) {
-				return $this->fail('Material could not be processed: ' . $e->getMessage(), [
+				return $this->fail($this->t('service_material_processing_failed', 'Material could not be processed: %s', $e->getMessage()), [
 					'materialIndex' => $index,
 					'materialType' => $input['type'],
 					'materialName' => $input['name'],
@@ -182,11 +193,11 @@ class ContentForgeWorkbenchService implements IOutput {
 		$instance = $this->getRequestedWorkflowInstance($proposal);
 
 		if ($proposal === null) {
-			return $this->fail('Proposal not found.', $this->requestLookupContext());
+			return $this->fail($this->t('service_proposal_not_found', 'Proposal not found.'), $this->requestLookupContext());
 		}
 
 		if ($instance === null) {
-			return $this->fail('Workflow instance not found.', $this->requestLookupContext($proposal));
+			return $this->fail($this->t('service_workflow_not_found', 'Workflow instance not found.'), $this->requestLookupContext($proposal));
 		}
 
 		$this->syncWidgetMaterialsForProject($proposal);
@@ -213,11 +224,11 @@ class ContentForgeWorkbenchService implements IOutput {
 		$instance = $this->getRequestedWorkflowInstance($proposal);
 
 		if ($proposal === null) {
-			return $this->fail('Proposal not found.', $this->requestLookupContext());
+			return $this->fail($this->t('service_proposal_not_found', 'Proposal not found.'), $this->requestLookupContext());
 		}
 
 		if ($instance === null) {
-			return $this->fail('Workflow instance not found.', $this->requestLookupContext($proposal));
+			return $this->fail($this->t('service_workflow_not_found', 'Workflow instance not found.'), $this->requestLookupContext($proposal));
 		}
 
 		$editedContent = null;
@@ -230,7 +241,7 @@ class ContentForgeWorkbenchService implements IOutput {
 			$editedContent = $this->getEditedContentFromRequest();
 
 			if ($editedContent === null) {
-				return $this->fail('Edited content is missing or invalid.', $this->requestLookupContext($proposal));
+				return $this->fail($this->t('service_edited_content_invalid', 'Edited content is missing or invalid.'), $this->requestLookupContext($proposal));
 			}
 
 			$decisionType = 'accept_with_changes';
@@ -264,17 +275,17 @@ class ContentForgeWorkbenchService implements IOutput {
 		$instance = $this->getRequestedWorkflowInstance($proposal);
 
 		if ($proposal === null) {
-			return $this->fail('Proposal not found.', $this->requestLookupContext());
+			return $this->fail($this->t('service_proposal_not_found', 'Proposal not found.'), $this->requestLookupContext());
 		}
 
 		if ($instance === null) {
-			return $this->fail('Workflow instance not found.', $this->requestLookupContext($proposal));
+			return $this->fail($this->t('service_workflow_not_found', 'Workflow instance not found.'), $this->requestLookupContext($proposal));
 		}
 
 		$editedContent = $this->getEditedContentFromRequest();
 
 		if ($editedContent === null) {
-			return $this->fail('Edited content is missing or invalid.', $this->requestLookupContext($proposal));
+			return $this->fail($this->t('service_edited_content_invalid', 'Edited content is missing or invalid.'), $this->requestLookupContext($proposal));
 		}
 
 		$editedContent['review'] = is_array($editedContent['review'] ?? null) ? $editedContent['review'] : [];
@@ -309,7 +320,7 @@ class ContentForgeWorkbenchService implements IOutput {
 
 	protected function previewMaterial(): array {
 		$type = strtolower(trim($this->input('materialType', 'text')));
-		$name = $this->input('name', 'Material');
+		$name = $this->input('name', $this->t('service_material_name', 'Material'));
 
 		if ($type === 'url' || $type === 'link' || $type === 'web') {
 			$type = 'web_url';
@@ -320,7 +331,7 @@ class ContentForgeWorkbenchService implements IOutput {
 				$url = $this->input('url');
 
 				if ($url === '') {
-					return $this->fail('Web link URL is required.', ['materialType' => $type]);
+					return $this->fail($this->t('service_web_link_required', 'Web link URL is required.'), ['materialType' => $type]);
 				}
 
 				$prepared = $this->materialService->prepareWebLinkMaterial($name, $url);
@@ -338,7 +349,7 @@ class ContentForgeWorkbenchService implements IOutput {
 				'ok' => true,
 				'action' => 'preview_material',
 				'material' => [
-					'name' => $name !== '' ? $name : 'Text material',
+					'name' => $name !== '' ? $name : $this->t('service_text_material_name', 'Text material'),
 					'type' => 'text',
 					'content' => $content,
 					'contentPreview' => substr($content, 0, 1200),
@@ -349,7 +360,7 @@ class ContentForgeWorkbenchService implements IOutput {
 				]
 			];
 		} catch (\Throwable $e) {
-			return $this->fail('Material preview failed: ' . $e->getMessage(), [
+			return $this->fail($this->t('service_material_preview_failed', 'Material preview failed: %s', $e->getMessage()), [
 				'materialType' => $type,
 				'name' => $name,
 				'url' => $this->input('url')
@@ -362,7 +373,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		$projectId = $this->input('projectId');
 
 		if ($projectId === '') {
-			return $this->fail('projectId is required to save material.', [
+			return $this->fail($this->t('service_project_id_save_required', 'projectId is required to save material.'), [
 				'projectId' => $projectId
 			]);
 		}
@@ -370,14 +381,14 @@ class ContentForgeWorkbenchService implements IOutput {
 		$input = $this->normalizeWidgetMaterialInput([
 			'id' => $this->input('materialId'),
 			'type' => $this->input('materialType', 'text'),
-			'name' => $this->input('name', 'Material'),
+			'name' => $this->input('name', $this->t('service_material_name', 'Material')),
 			'url' => $this->input('url'),
 			'content' => $this->input('content'),
 			'meta' => $this->decodeMaterialMeta($this->input('metaJson'))
 		]);
 
 		if ($input === null) {
-			return $this->fail('Material is empty or invalid.', [
+			return $this->fail($this->t('service_material_invalid', 'Material is empty or invalid.'), [
 				'projectId' => $projectId,
 				'materialType' => $this->input('materialType', 'text'),
 				'hasContent' => $this->input('content') !== '',
@@ -400,7 +411,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		$materialId = $this->input('materialId');
 
 		if ($projectId === '' || $materialId === '') {
-			return $this->fail('projectId and materialId are required to delete material.', [
+			return $this->fail($this->t('service_project_material_delete_required', 'projectId and materialId are required to delete material.'), [
 				'projectId' => $projectId,
 				'materialId' => $materialId
 			]);
@@ -409,7 +420,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		$material = $this->materialService->getMaterial($materialId);
 
 		if ($material === null || $material->projectId !== $projectId) {
-			return $this->fail('Material not found for this project.', [
+			return $this->fail($this->t('service_material_not_found', 'Material not found for this project.'), [
 				'projectId' => $projectId,
 				'materialId' => $materialId
 			]);
@@ -459,7 +470,7 @@ class ContentForgeWorkbenchService implements IOutput {
 			if ($legacyMaterial !== '') {
 				$items[] = [
 					'type' => 'text',
-					'name' => 'Widget material',
+					'name' => $this->t('service_widget_material_name', 'Widget material'),
 					'content' => $legacyMaterial
 				];
 			}
@@ -595,7 +606,7 @@ class ContentForgeWorkbenchService implements IOutput {
 			return [
 				'id' => $id,
 				'type' => 'web_url',
-				'name' => $name !== '' ? $name : 'Web link',
+				'name' => $name !== '' ? $name : $this->t('service_web_link_name', 'Web link'),
 				'url' => $url,
 				'content' => $content,
 				'meta' => is_array($item['meta'] ?? null) ? $this->safeMaterialMeta($item['meta']) : []
@@ -611,7 +622,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		return [
 			'id' => $id,
 			'type' => 'text',
-			'name' => $name !== '' ? $name : 'Text material',
+			'name' => $name !== '' ? $name : $this->t('service_text_material_name', 'Text material'),
 			'content' => $content
 		];
 	}
@@ -647,7 +658,7 @@ class ContentForgeWorkbenchService implements IOutput {
 
 		return [
 			'id' => (string) ($material['id'] ?? ''),
-			'name' => (string) ($material['name'] ?? 'Material'),
+			'name' => (string)($material['name'] ?? $this->t('service_material_name', 'Material')),
 			'type' => (string) ($meta['materialType'] ?? 'text'),
 			'sourceUrl' => (string) ($meta['sourceUrl'] ?? ''),
 			'sourceTitle' => (string) ($meta['sourceTitle'] ?? ''),
@@ -658,8 +669,8 @@ class ContentForgeWorkbenchService implements IOutput {
 	}
 
 	protected function createProject(): array {
-		$title = $this->input('title', 'ContentForge Test Project');
-		$description = $this->input('description', 'Created from ContentForge Workbench.');
+		$title = $this->input('title', $this->t('default_project_title', 'ContentForge Test Project'));
+		$description = $this->input('description', $this->t('service_project_created_workbench', 'Created from ContentForge Workbench.'));
 		$project = $this->projectService->createProject($title, $description);
 		$instance = $this->runnerService->startWorkflow($project, $this->definitionService->getDefaultDefinition());
 
@@ -672,11 +683,11 @@ class ContentForgeWorkbenchService implements IOutput {
 
 	protected function addMaterial(): array {
 		$projectId = $this->input('projectId');
-		$name = $this->input('name', 'Input material');
+		$name = $this->input('name', $this->t('service_input_material_name', 'Input material'));
 		$content = $this->input('content');
 
 		if ($projectId === '' || $content === '') {
-			return $this->fail('projectId and content are required.', [
+			return $this->fail($this->t('service_project_content_required', 'projectId and content are required.'), [
 				'projectId' => $projectId,
 				'hasContent' => $content !== ''
 			]);
@@ -695,7 +706,7 @@ class ContentForgeWorkbenchService implements IOutput {
 		$instance = $this->runnerService->getWorkflowInstance($instanceId);
 
 		if ($instance === null) {
-			return $this->fail('Workflow instance not found.', $this->requestLookupContext());
+			return $this->fail($this->t('service_workflow_not_found', 'Workflow instance not found.'), $this->requestLookupContext());
 		}
 
 		$stepRun = $this->runnerService->runCurrentNode($instance);
@@ -716,11 +727,11 @@ class ContentForgeWorkbenchService implements IOutput {
 		$feedback = $this->input('feedback');
 
 		if ($proposal === null) {
-			return $this->fail('Proposal not found.', $this->requestLookupContext());
+			return $this->fail($this->t('service_proposal_not_found', 'Proposal not found.'), $this->requestLookupContext());
 		}
 
 		if ($instance === null) {
-			return $this->fail('Workflow instance not found.', $this->requestLookupContext($proposal));
+			return $this->fail($this->t('service_workflow_not_found', 'Workflow instance not found.'), $this->requestLookupContext($proposal));
 		}
 
 		$decision = ContentForgeDecision::create($proposal->projectId, $instance->id, $proposal->stepRunId, $proposal->id, $type, $feedback);
@@ -1065,7 +1076,7 @@ class ContentForgeWorkbenchService implements IOutput {
 			'request' => $this->requestLookupContext()
 		];
 
-		return $this->fail('ContentForge could not complete the request. The technical details were logged.', $context);
+		return $this->fail($this->t('service_request_failed', 'ContentForge could not complete the request. The technical details were logged.'), $context);
 	}
 
 	protected function formatPreviousException(\Throwable $e): array {
@@ -1189,6 +1200,13 @@ class ContentForgeWorkbenchService implements IOutput {
 		$parts[] = 'storage=' . json_encode($storage, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
 		return implode(' | ', $parts);
+	}
+
+
+	private function t(string $key, string $fallback, mixed ...$values): string {
+		$text = $this->translation->translate('Display', 'contentforge_step_widget_display', $key, $fallback);
+
+		return $values === [] ? $text : vsprintf($text, $values);
 	}
 
 	protected function decoratePayload(array $payload, string $action): array {

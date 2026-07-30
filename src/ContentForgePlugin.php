@@ -21,6 +21,7 @@ use Base3\Configuration\Api\IConfiguration;
 use Base3\LinkTarget\Api\ILinkTargetService;
 use Base3\Logger\Api\ILogger;
 use Base3\Settings\Api\ISettingsStore;
+use Base3\Translation\Api\ITranslation;
 use ContentForge\Api\IContentForgeAiService;
 use ContentForge\Api\IContentForgeArtifactRendererRegistry;
 use ContentForge\Api\IContentForgeArtifactService;
@@ -140,6 +141,7 @@ class ContentForgePlugin implements IPlugin {
 
 			->set(IContentForgeSectionTemplateRegistry::class, fn($c) => new ContentForgeSectionTemplateRegistry(
 				$c->get(IClassMap::class),
+				$c->get(ITranslation::class),
 				[
 					new ContentForgeMicroLearningSectionTemplate(),
 					new ContentForgeInformationSectionTemplate(),
@@ -227,12 +229,14 @@ class ContentForgePlugin implements IPlugin {
 			->set(ContentForgeExportDownloadService::getName(), fn($c) => new ContentForgeExportDownloadService(
 				$c->get(IContentForgeJsonStorageService::class),
 				$c->get(IRequest::class),
+				$c->get(ITranslation::class),
 				$c->get(ILogger::class)
 			), IContainer::SHARED)
 
 			->set(ContentForgeExportDownloadService::class, fn($c) => new ContentForgeExportDownloadService(
 				$c->get(IContentForgeJsonStorageService::class),
 				$c->get(IRequest::class),
+				$c->get(ITranslation::class),
 				$c->get(ILogger::class)
 			), IContainer::SHARED)
 
@@ -247,6 +251,7 @@ class ContentForgePlugin implements IPlugin {
 				$c->get(IContentForgeSectionTemplateRegistry::class),
 				$c->get(IContentForgeJsonStorageService::class),
 				$c->get(IRequest::class),
+				$c->get(ITranslation::class),
 				$c->get(ILogger::class)
 			), IContainer::SHARED)
 
@@ -260,6 +265,7 @@ class ContentForgePlugin implements IPlugin {
 				$c->get(IContentForgeSectionTemplateRegistry::class),
 				$c->get(IContentForgeJsonStorageService::class),
 				$c->get(IRequest::class),
+				$c->get(ITranslation::class),
 				$c->get(ILogger::class)
 			), IContainer::SHARED);
 	}

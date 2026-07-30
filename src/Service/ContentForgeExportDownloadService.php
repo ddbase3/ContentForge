@@ -16,6 +16,7 @@ namespace ContentForge\Service;
 use Base3\Api\IOutput;
 use Base3\Api\IRequest;
 use Base3\Logger\Api\ILogger;
+use Base3\Translation\Api\ITranslation;
 use ContentForge\Api\IContentForgeJsonStorageService;
 
 class ContentForgeExportDownloadService implements IOutput {
@@ -23,6 +24,7 @@ class ContentForgeExportDownloadService implements IOutput {
 	public function __construct(
 		private readonly IContentForgeJsonStorageService $storage,
 		private readonly IRequest $request,
+		private readonly ITranslation $translation,
 		private readonly ?ILogger $logger = null
 	) {}
 
@@ -35,14 +37,14 @@ class ContentForgeExportDownloadService implements IOutput {
 
 		if ($id === '') {
 			$this->sendErrorHeaders(400);
-			return 'Missing export id.';
+			return $this->t('download_missing_export_id', 'Missing export id.');
 		}
 
 		$record = $this->storage->get('delivered_exports', $id);
 
 		if (!is_array($record)) {
 			$this->sendErrorHeaders(404);
-			return 'Export not found.';
+			return $this->t('download_export_not_found', 'Export not found.');
 		}
 
 		$path = (string) ($record['path'] ?? '');
@@ -53,7 +55,7 @@ class ContentForgeExportDownloadService implements IOutput {
 				'path' => $path
 			]);
 			$this->sendErrorHeaders(404);
-			return 'Export file not found.';
+			return $this->t('download_export_file_not_found', 'Export file not found.');
 		}
 
 		$filename = $this->sanitizeFilename((string) ($record['filename'] ?? basename($path)));
@@ -69,6 +71,11 @@ class ContentForgeExportDownloadService implements IOutput {
 		$content = file_get_contents($path);
 
 		return is_string($content) ? $content : '';
+	}
+
+
+	private function t(string $key, string $fallback): string {
+		return $this->translation->translate('Display', 'contentforge_step_widget_display', $key, $fallback);
 	}
 
 	protected function normalizeId(string $id): string {
