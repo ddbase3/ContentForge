@@ -2,7 +2,7 @@
 	$rootId = uniqid('contentforgeStepWidget_', false);
 	$showStatus = !empty($this->_['show_status']);
 	$showDebug = !empty($this->_['show_debug']);
-	$assetVersion = '028';
+	$assetVersion = '029';
 	$translations = is_array($this->_['translations'] ?? null) ? $this->_['translations'] : [];
 	$t = static fn(string $key, string $fallback): string => trim((string)($translations[$key] ?? '')) !== ''
 		? (string)$translations[$key]
@@ -290,7 +290,8 @@ function initContentForgeStepWidget_<?php echo str_replace('-', '_', $rootId); ?
 		exportTarget: <?php echo json_encode((string) $this->_['export_target'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		exportTargetConfig: <?php echo json_encode($this->_['export_target_config'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
 		showDebug: <?php echo $showDebug ? 'true' : 'false'; ?>,
-		sectionTemplates: <?php echo json_encode($this->_['section_templates'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
+		sectionTemplates: <?php echo json_encode($this->_['section_templates'] ?? [], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>,
+		strings: <?php echo json_encode($translations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
 	};
 
 	function loadScript(src) {

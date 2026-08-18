@@ -1,4 +1,27 @@
 (function(global) {
+	function translate(strings, key, fallback, replacements) {
+		let value = String(strings && strings[key] != null ? strings[key] : '').trim();
+		if (value === '') value = fallback;
+		Object.keys(replacements || {}).forEach(function(name) {
+			value = value.split('{' + name + '}').join(String(replacements[name]));
+		});
+		return value;
+	}
+
+	function tr(root, key, fallback, replacements) {
+		return translate(root && root.__contentForgeStrings ? root.__contentForgeStrings : {}, key, fallback, replacements);
+	}
+
+	function trConfig(config, key, fallback, replacements) {
+		return translate(config && config.strings ? config.strings : {}, key, fallback, replacements);
+	}
+
+	function escapeHtml(value) {
+		return String(value).replace(/[&<>"']/g, function(character) {
+			return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'}[character];
+		});
+	}
+
 	function encode(data) {
 		const params = new URLSearchParams();
 
@@ -25,7 +48,7 @@
 		} catch (error) {
 			return {
 				ok: false,
-				error: 'ContentForge service did not return valid JSON.',
+				error: trConfig(config, 'client_invalid_json', 'ContentForge service did not return valid JSON.'),
 				diagnostics: {
 					status: response.status,
 					responseText: text.substring(0, 2000)
@@ -126,25 +149,25 @@
 		if (errorBox) {
 			const isError = payload && payload.ok === false;
 			errorBox.hidden = !isError;
-			errorBox.textContent = isError ? buildErrorMessage(message, payload) : '';
+			errorBox.textContent = isError ? buildErrorMessage(root, message, payload) : '';
 		}
 
 		const json = root.querySelector('[data-cf-status-json]');
 		if (json && payload) json.textContent = JSON.stringify(payload, null, 2);
 	}
 
-	function buildErrorMessage(message, payload) {
-		const parts = [message || payload.error || 'ContentForge could not complete the request.'];
+	function buildErrorMessage(root, message, payload) {
+		const parts = [message || payload.error || tr(root, 'client_request_failed_generic', 'ContentForge could not complete the request.')];
 
 		if (payload && payload.requestId) {
-			parts.push('Request: ' + payload.requestId);
+			parts.push(tr(root, 'client_request_id', 'Request: {id}', {id: payload.requestId}));
 		}
 
 		if (payload && payload.error && payload.error !== message) {
 			parts.push(payload.error);
 		}
 
-		parts.push('Technical details were written to the contentforge log.');
+		parts.push(tr(root, 'client_log_notice', 'Technical details were written to the contentforge log.'));
 
 		return parts.join('\n');
 	}
@@ -194,7 +217,7 @@
 			normalized.push({value: value, label: String(option.label || option.exporter || value)});
 		});
 
-		if (!seen.html_package) normalized.unshift({value: 'html_package', label: 'HTML package'});
+		if (!seen.html_package) normalized.unshift({value: 'html_package', label: tr(root, 'export_html_package', 'HTML package')});
 
 		select.innerHTML = '';
 		normalized.forEach(function(option) {
@@ -237,7 +260,7 @@
 
 			const nameField = row.querySelector('[data-cf-material-name]');
 			if (nameField && isGenericMaterialName(nameField.value)) {
-				nameField.value = material.sourceTitle || material.name || nameField.value || 'Material';
+				nameField.value = material.sourceTitle || material.name || nameField.value || tr(root, 'service_material_name', 'Material');
 			}
 
 			if (type === 'web_url') {
@@ -305,16 +328,16 @@
 		row.setAttribute('data-cf-material-item', '1');
 		row.innerHTML = '' +
 			'<div class="cf-material-row">' +
-				'<select data-cf-material-type aria-label="Material type">' +
-					'<option value="text">Text</option>' +
-					'<option value="web_url">Web link</option>' +
+				'<select data-cf-material-type aria-label="' + escapeHtml(tr(root, 'aria_material_type', 'Material type')) + '">' +
+					'<option value="text">' + escapeHtml(tr(root, 'material_text', 'Text')) + '</option>' +
+					'<option value="web_url">' + escapeHtml(tr(root, 'material_web_link', 'Web link')) + '</option>' +
 				'</select>' +
-				'<input data-cf-material-name type="text" value="Material" aria-label="Material name" />' +
-				'<button type="button" class="secondary" data-contentforge-action="remove-material">Remove</button>' +
+				'<input data-cf-material-name type="text" value="' + escapeHtml(tr(root, 'service_material_name', 'Material')) + '" aria-label="' + escapeHtml(tr(root, 'aria_material_name', 'Material name')) + '" />' +
+				'<button type="button" class="secondary" data-contentforge-action="remove-material">' + escapeHtml(tr(root, 'remove', 'Remove')) + '</button>' +
 			'</div>' +
-			'<div class="cf-material-text" data-cf-material-text-wrap><textarea data-cf-material-content aria-label="Text material"></textarea></div>' +
-			'<div class="cf-material-url" data-cf-material-url-wrap hidden><input data-cf-material-url type="url" placeholder="https://example.org/article" aria-label="Web link URL" /></div>' +
-			'<details class="cf-material-input-preview" data-cf-material-input-preview hidden><summary data-cf-material-input-preview-summary>Preview</summary><pre data-cf-material-input-preview-text></pre></details>';
+			'<div class="cf-material-text" data-cf-material-text-wrap><textarea data-cf-material-content aria-label="' + escapeHtml(tr(root, 'aria_text_material', 'Text material')) + '"></textarea></div>' +
+			'<div class="cf-material-url" data-cf-material-url-wrap hidden><input data-cf-material-url type="url" placeholder="https://example.org/article" aria-label="' + escapeHtml(tr(root, 'aria_web_link_url', 'Web link URL')) + '" /></div>' +
+			'<details class="cf-material-input-preview" data-cf-material-input-preview hidden><summary data-cf-material-input-preview-summary>' + escapeHtml(tr(root, 'preview', 'Preview')) + '</summary><pre data-cf-material-input-preview-text></pre></details>';
 
 		list.appendChild(row);
 		const typeField = row.querySelector('[data-cf-material-type]');
@@ -329,13 +352,13 @@
 			const name = row.querySelector('[data-cf-material-name]');
 			const content = row.querySelector('[data-cf-material-content]');
 			const url = row.querySelector('[data-cf-material-url]');
-			if (name) name.value = 'Material';
+			if (name) name.value = tr(root, 'service_material_name', 'Material');
 			if (content) content.value = '';
 			if (url) url.value = '';
 			row.__contentForgeParsedMaterial = null;
 			row.__contentForgeParsedUrl = '';
 			row.removeAttribute('data-cf-material-id');
-			renderMaterialInputPreview(row, null, 'empty');
+			renderMaterialInputPreview(root, row, null, 'empty');
 			return;
 		}
 
@@ -349,7 +372,7 @@
 		if (type === 'text') {
 			row.__contentForgeParsedMaterial = null;
 			row.__contentForgeParsedUrl = '';
-			renderTextMaterialPreview(row);
+			renderTextMaterialPreview(root, row);
 			scheduleMaterialSave(root, row, config);
 			return;
 		}
@@ -358,38 +381,38 @@
 		if (url === '') {
 			row.__contentForgeParsedMaterial = null;
 			row.__contentForgeParsedUrl = '';
-			renderMaterialInputPreview(row, null, 'empty');
+			renderMaterialInputPreview(root, row, null, 'empty');
 			return;
 		}
 
 		if (!/^https?:\/\//i.test(url)) {
 			row.__contentForgeParsedMaterial = null;
 			row.__contentForgeParsedUrl = '';
-			renderMaterialInputPreview(row, {contentPreview: 'Enter a full http or https URL.'}, 'invalid');
+			renderMaterialInputPreview(root, row, {contentPreview: tr(root, 'client_enter_full_url', 'Enter a full http or https URL.')}, 'invalid');
 			return;
 		}
 
 		if (row.__contentForgeParsedMaterial && row.__contentForgeParsedUrl === url) {
-			renderMaterialInputPreview(row, row.__contentForgeParsedMaterial, 'ready');
+			renderMaterialInputPreview(root, row, row.__contentForgeParsedMaterial, 'ready');
 			scheduleMaterialSave(root, row, config);
 			return;
 		}
 
-		renderMaterialInputPreview(row, {contentPreview: 'Downloading and extracting web content...'}, 'loading');
+		renderMaterialInputPreview(root, row, {contentPreview: tr(root, 'client_downloading_web', 'Downloading and extracting web content...')}, 'loading');
 		row.__contentForgePreviewTimer = setTimeout(function() {
 			processMaterialPreview(root, row, config);
 		}, 650);
 	}
 
-	function renderTextMaterialPreview(row) {
+	function renderTextMaterialPreview(root, row) {
 		const content = (row.querySelector('[data-cf-material-content]')?.value || '').trim();
 		if (content === '') {
-			renderMaterialInputPreview(row, null, 'empty');
+			renderMaterialInputPreview(root, row, null, 'empty');
 			return;
 		}
 
-		renderMaterialInputPreview(row, {
-			name: row.querySelector('[data-cf-material-name]')?.value || 'Text material',
+		renderMaterialInputPreview(root, row, {
+			name: row.querySelector('[data-cf-material-name]')?.value || tr(root, 'service_text_material_name', 'Text material'),
 			type: 'text',
 			content: content,
 			contentPreview: content.substring(0, 1200),
@@ -400,7 +423,7 @@
 
 	async function processMaterialPreview(root, row, config) {
 		const url = (row.querySelector('[data-cf-material-url]')?.value || '').trim();
-		const name = row.querySelector('[data-cf-material-name]')?.value || 'Web link';
+		const name = row.querySelector('[data-cf-material-name]')?.value || tr(root, 'service_web_link_name', 'Web link');
 
 		if (url === '') return;
 
@@ -415,21 +438,21 @@
 			if (!payload.ok) {
 				row.__contentForgeParsedMaterial = null;
 				row.__contentForgeParsedUrl = '';
-				renderMaterialInputPreview(row, {contentPreview: payload.error || 'Material preview failed.'}, 'error');
-				setStatus(root, payload.error || 'Material preview failed.', payload);
+				renderMaterialInputPreview(root, row, {contentPreview: payload.error || tr(root, 'client_material_preview_failed', 'Material preview failed.')}, 'error');
+				setStatus(root, payload.error || tr(root, 'client_material_preview_failed', 'Material preview failed.'), payload);
 				return;
 			}
 
 			row.__contentForgeParsedMaterial = payload.material || null;
 			row.__contentForgeParsedUrl = url;
-			renderMaterialInputPreview(row, payload.material || null, 'ready', true);
+			renderMaterialInputPreview(root, row, payload.material || null, 'ready', true);
 			await saveMaterialRow(root, row, config, payload.material || null);
-			setStatus(root, 'Material preview ready.', payload);
+			setStatus(root, tr(root, 'client_material_preview_ready', 'Material preview ready.'), payload);
 		} catch (error) {
 			row.__contentForgeParsedMaterial = null;
 			row.__contentForgeParsedUrl = '';
-			renderMaterialInputPreview(row, {contentPreview: 'Material preview failed: ' + error.message}, 'error');
-			setStatus(root, 'Material preview failed: ' + error.message, {ok: false, error: error.message});
+			renderMaterialInputPreview(root, row, {contentPreview: tr(root, 'client_material_preview_failed_error', 'Material preview failed: {error}', {error: error.message})}, 'error');
+			setStatus(root, tr(root, 'client_material_preview_failed_error', 'Material preview failed: {error}', {error: error.message}), {ok: false, error: error.message});
 		}
 	}
 
@@ -447,12 +470,12 @@
 			if (row.__contentForgeParsedMaterial && row.__contentForgeParsedUrl === url) continue;
 
 			clearTimeout(row.__contentForgePreviewTimer);
-			renderMaterialInputPreview(row, {contentPreview: 'Downloading and extracting web content...'}, 'loading', true);
+			renderMaterialInputPreview(root, row, {contentPreview: tr(root, 'client_downloading_web', 'Downloading and extracting web content...')}, 'loading', true);
 			await processMaterialPreview(root, row, config);
 		}
 	}
 
-	function renderMaterialInputPreview(row, material, state, open) {
+	function renderMaterialInputPreview(root, row, material, state, open) {
 		const preview = row.querySelector('[data-cf-material-input-preview]');
 		const summary = row.querySelector('[data-cf-material-input-preview-summary]');
 		const output = row.querySelector('[data-cf-material-input-preview-text]');
@@ -465,12 +488,12 @@
 			preview.hidden = true;
 			preview.open = false;
 			output.textContent = '';
-			summary.textContent = 'Preview';
+			summary.textContent = tr(root, 'preview', 'Preview');
 			return;
 		}
 
-		const name = material && material.name ? material.name : (row.querySelector('[data-cf-material-name]')?.value || 'Material');
-		const label = state === 'loading' ? 'Loading preview' : state === 'error' ? 'Preview failed' : state === 'invalid' ? 'Preview unavailable' : 'Preview';
+		const name = material && material.name ? material.name : (row.querySelector('[data-cf-material-name]')?.value || tr(root, 'service_material_name', 'Material'));
+		const label = state === 'loading' ? tr(root, 'client_loading_preview', 'Loading preview') : state === 'error' ? tr(root, 'client_preview_failed', 'Preview failed') : state === 'invalid' ? tr(root, 'client_preview_unavailable', 'Preview unavailable') : tr(root, 'preview', 'Preview');
 		const source = material && material.meta && material.meta.sourceTitle ? material.meta.sourceTitle : name;
 		const text = material && (material.contentPreview || material.content) ? String(material.contentPreview || material.content) : '';
 
@@ -561,14 +584,14 @@
 				projectId: projectId,
 				materialId: item.id || '',
 				materialType: item.type,
-				name: item.name || 'Material',
+				name: item.name || tr(root, 'service_material_name', 'Material'),
 				url: item.url || '',
 				content: item.content || '',
 				metaJson: JSON.stringify(item.meta || {})
 			});
 
 			if (!payload.ok) {
-				setStatus(root, payload.error || 'Material could not be saved.', payload);
+				setStatus(root, payload.error || tr(root, 'client_material_save_failed', 'Material could not be saved.'), payload);
 				return null;
 			}
 
@@ -587,7 +610,7 @@
 
 			return payload.material || null;
 		} catch (error) {
-			setStatus(root, 'Material could not be saved: ' + error.message, {ok: false, error: error.message});
+			setStatus(root, tr(root, 'client_material_save_failed_error', 'Material could not be saved: {error}', {error: error.message}), {ok: false, error: error.message});
 			return null;
 		}
 	}
@@ -608,10 +631,10 @@
 				root.__contentForgeMaterials = payload.materials;
 				renderMaterialResults(root, payload.materials);
 			} else if (!payload.ok) {
-				setStatus(root, payload.error || 'Material could not be deleted.', payload);
+				setStatus(root, payload.error || tr(root, 'client_material_delete_failed', 'Material could not be deleted.'), payload);
 			}
 		} catch (error) {
-			setStatus(root, 'Material could not be deleted: ' + error.message, {ok: false, error: error.message});
+			setStatus(root, tr(root, 'client_material_delete_failed_error', 'Material could not be deleted: {error}', {error: error.message}), {ok: false, error: error.message});
 		}
 	}
 
@@ -626,7 +649,7 @@
 		if (materials.length === 0) return;
 
 		const title = document.createElement('h3');
-		title.textContent = 'Integrated materials';
+		title.textContent = tr(root, 'client_integrated_materials', 'Integrated materials');
 		target.appendChild(title);
 
 		materials.forEach(function(material) {
@@ -634,8 +657,8 @@
 			details.className = 'cf-integrated-material';
 
 			const summary = document.createElement('summary');
-			const label = material.type === 'web_url' ? 'Web link' : 'Text';
-			const title = material.sourceTitle || material.name || 'Material';
+			const label = material.type === 'web_url' ? tr(root, 'material_web_link', 'Web link') : tr(root, 'material_text', 'Text');
+			const title = material.sourceTitle || material.name || tr(root, 'service_material_name', 'Material');
 			summary.textContent = label + ': ' + title;
 			details.appendChild(summary);
 
@@ -661,7 +684,7 @@
 	}
 
 	function getTemplateDefinitions(root) {
-		return root.__contentForgeSectionTemplates || getFallbackTemplateDefinitions();
+		return root.__contentForgeSectionTemplates || getFallbackTemplateDefinitions(root);
 	}
 
 	function getTemplateDefinition(root, template) {
@@ -671,62 +694,62 @@
 		return definitions[template] || definitions.micro_learning || null;
 	}
 
-	function getFallbackTemplateDefinitions() {
+	function getFallbackTemplateDefinitions(root) {
 		return {
 			micro_learning: {
 				key: 'micro_learning',
-				label: 'Micro-learning card',
-				preview: {label: 'Show section content', preview: {type: 'text', path: 'body', length: 180}, details: [{type: 'paragraph', path: 'body'}, {type: 'interaction', path: 'interaction.prompt'}]},
+				label: tr(root, 'section_micro_learning', 'Micro-learning card'),
+				preview: {label: tr(root, 'show_section_content', 'Show section content'), preview: {type: 'text', path: 'body', length: 180}, details: [{type: 'paragraph', path: 'body'}, {type: 'interaction', path: 'interaction.prompt'}]},
 				schema: {properties: {
-					template: {'const': 'micro_learning', title: 'Section template', 'x-contentforge-control': 'template_select'},
-					title: {type: 'string', title: 'Headline', 'x-contentforge-control': 'text'},
-					body: {type: 'string', title: 'Text', 'x-contentforge-control': 'textarea'},
-					interaction: {type: 'object', properties: {type: {type: 'string', default: 'reading', 'x-contentforge-hidden': true}, prompt: {type: 'string', title: 'Learner prompt', 'x-contentforge-control': 'textarea'}}}
+					template: {'const': 'micro_learning', title: tr(root, 'section_template', 'Section template'), 'x-contentforge-control': 'template_select'},
+					title: {type: 'string', title: tr(root, 'headline', 'Headline'), 'x-contentforge-control': 'text'},
+					body: {type: 'string', title: tr(root, 'text', 'Text'), 'x-contentforge-control': 'textarea'},
+					interaction: {type: 'object', properties: {type: {type: 'string', default: 'reading', 'x-contentforge-hidden': true}, prompt: {type: 'string', title: tr(root, 'learner_prompt', 'Learner prompt'), 'x-contentforge-control': 'textarea'}}}
 				}},
-				defaults: {en: {template: 'micro_learning', title: 'New learning card', body: 'New content.', interaction: {type: 'reading', prompt: ''}}}
+				defaults: {en: {template: 'micro_learning', title: tr(root, 'client_new_learning_card', 'New learning card'), body: tr(root, 'client_new_content', 'New content.'), interaction: {type: 'reading', prompt: ''}}}
 			},
 			short_overview: {
 				key: 'short_overview',
-				label: 'Information section',
-				preview: {label: 'Show overview text', preview: {type: 'text', path: 'body', length: 260}, details: [{type: 'paragraph', path: 'body'}, {type: 'extra', path: 'footer'}]},
+				label: tr(root, 'section_information', 'Information section'),
+				preview: {label: tr(root, 'show_overview_text', 'Show overview text'), preview: {type: 'text', path: 'body', length: 260}, details: [{type: 'paragraph', path: 'body'}, {type: 'extra', path: 'footer'}]},
 				schema: {properties: {
-					template: {'const': 'short_overview', title: 'Section template', 'x-contentforge-control': 'template_select'},
-					title: {type: 'string', title: 'Headline', 'x-contentforge-control': 'text'},
-					body: {type: 'string', title: 'Text', 'x-contentforge-control': 'textarea'},
-					footer: {type: 'string', title: 'Footer', 'x-contentforge-control': 'textarea'}
+					template: {'const': 'short_overview', title: tr(root, 'section_template', 'Section template'), 'x-contentforge-control': 'template_select'},
+					title: {type: 'string', title: tr(root, 'headline', 'Headline'), 'x-contentforge-control': 'text'},
+					body: {type: 'string', title: tr(root, 'text', 'Text'), 'x-contentforge-control': 'textarea'},
+					footer: {type: 'string', title: tr(root, 'footer', 'Footer'), 'x-contentforge-control': 'textarea'}
 				}},
-				defaults: {en: {template: 'short_overview', title: 'New information section', body: 'New content.', footer: ''}}
+				defaults: {en: {template: 'short_overview', title: tr(root, 'client_new_information_section', 'New information section'), body: tr(root, 'client_new_content', 'New content.'), footer: ''}}
 			},
 			checklist: {
 				key: 'checklist',
-				label: 'Checklist section',
-				preview: {label: 'Show checklist details', preview: {type: 'list', path: 'items', fallbackPath: 'body', limit: 3, length: 180}, details: [{type: 'list', path: 'items'}, {type: 'paragraph', path: 'body'}]},
+				label: tr(root, 'section_checklist', 'Checklist section'),
+				preview: {label: tr(root, 'show_checklist_details', 'Show checklist details'), preview: {type: 'list', path: 'items', fallbackPath: 'body', limit: 3, length: 180}, details: [{type: 'list', path: 'items'}, {type: 'paragraph', path: 'body'}]},
 				schema: {properties: {
-					template: {'const': 'checklist', title: 'Section template', 'x-contentforge-control': 'template_select'},
-					title: {type: 'string', title: 'Headline', 'x-contentforge-control': 'text'},
-					body: {type: 'string', title: 'Intro text', 'x-contentforge-control': 'textarea'},
-					items: {type: 'array', title: 'Checklist items', 'x-contentforge-control': 'string_list'}
+					template: {'const': 'checklist', title: tr(root, 'section_template', 'Section template'), 'x-contentforge-control': 'template_select'},
+					title: {type: 'string', title: tr(root, 'headline', 'Headline'), 'x-contentforge-control': 'text'},
+					body: {type: 'string', title: tr(root, 'intro_text', 'Intro text'), 'x-contentforge-control': 'textarea'},
+					items: {type: 'array', title: tr(root, 'checklist_items', 'Checklist items'), 'x-contentforge-control': 'string_list'}
 				}},
-				defaults: {en: {template: 'checklist', title: 'New checklist', body: 'Check the following points.', items: []}}
+				defaults: {en: {template: 'checklist', title: tr(root, 'client_new_checklist', 'New checklist'), body: tr(root, 'client_check_points', 'Check the following points.'), items: []}}
 			},
 			faq: {
 				key: 'faq',
-				label: 'FAQ section',
-				preview: {label: 'Show answer', preview: {type: 'text', path: 'body', length: 220, className: 'cf-choice-answer'}, details: [{type: 'paragraph', path: 'body'}, {type: 'interaction', path: 'interaction.prompt'}]},
+				label: tr(root, 'section_faq', 'FAQ section'),
+				preview: {label: tr(root, 'show_answer', 'Show answer'), preview: {type: 'text', path: 'body', length: 220, className: 'cf-choice-answer'}, details: [{type: 'paragraph', path: 'body'}, {type: 'interaction', path: 'interaction.prompt'}]},
 				schema: {properties: {
-					template: {'const': 'faq', title: 'Section template', 'x-contentforge-control': 'template_select'},
-					title: {type: 'string', title: 'Question', 'x-contentforge-control': 'text'},
-					body: {type: 'string', title: 'Answer', 'x-contentforge-control': 'textarea'},
-					interaction: {type: 'object', properties: {type: {type: 'string', default: 'question', 'x-contentforge-hidden': true}, prompt: {type: 'string', title: 'Follow-up prompt', 'x-contentforge-control': 'textarea'}}}
+					template: {'const': 'faq', title: tr(root, 'section_template', 'Section template'), 'x-contentforge-control': 'template_select'},
+					title: {type: 'string', title: tr(root, 'question', 'Question'), 'x-contentforge-control': 'text'},
+					body: {type: 'string', title: tr(root, 'answer', 'Answer'), 'x-contentforge-control': 'textarea'},
+					interaction: {type: 'object', properties: {type: {type: 'string', default: 'question', 'x-contentforge-hidden': true}, prompt: {type: 'string', title: tr(root, 'follow_up_prompt', 'Follow-up prompt'), 'x-contentforge-control': 'textarea'}}}
 				}},
-				defaults: {en: {template: 'faq', title: 'New question', body: 'New answer.', interaction: {type: 'question', prompt: ''}}}
+				defaults: {en: {template: 'faq', title: tr(root, 'client_new_question', 'New question'), body: tr(root, 'client_new_answer', 'New answer.'), interaction: {type: 'question', prompt: ''}}}
 			}
 		};
 	}
 
 	function renderProposal(root, proposal) {
 		if (!proposal) {
-			setStatus(root, 'No proposal found.', null);
+			setStatus(root, tr(root, 'client_no_proposal', 'No proposal found.'), null);
 			return;
 		}
 
@@ -741,8 +764,8 @@
 		const sections = root.querySelector('[data-cf-proposal-sections]');
 		const feedbackContext = root.querySelector('[data-cf-feedback-context]');
 
-		if (title) title.textContent = content.title || proposal.title || 'Review proposal';
-		if (summary) summary.textContent = content.summary || 'Review the proposed structure.';
+		if (title) title.textContent = content.title || proposal.title || tr(root, 'review_proposal', 'Review proposal');
+		if (summary) summary.textContent = content.summary || tr(root, 'client_review_structure', 'Review the proposed structure.');
 		if (feedbackContext) feedbackContext.innerHTML = '';
 
 		renderReviewNotice(root, content);
@@ -757,7 +780,7 @@
 		if (items.length === 0) {
 			const empty = document.createElement('p');
 			empty.className = 'cf-muted';
-			empty.textContent = 'This proposal does not contain any sections yet.';
+			empty.textContent = tr(root, 'client_no_sections', 'This proposal does not contain any sections yet.');
 			sections.appendChild(empty);
 			return;
 		}
@@ -770,7 +793,7 @@
 	function renderSectionCard(root, item, index) {
 		const content = clone(root.__contentForgeProposalContent || {});
 		const template = getSectionTemplate(item, content.generatorTemplate || 'micro_learning');
-		const title = item.title || 'Section ' + (index + 1);
+		const title = item.title || tr(root, 'client_section_number', 'Section {index}', {index: index + 1});
 		const card = document.createElement('article');
 		card.className = 'cf-choice cf-choice--' + normalizeCssToken(template);
 		card.setAttribute('data-cf-section-index', String(index));
@@ -784,7 +807,7 @@
 		dragHandle.setAttribute('data-cf-drag-handle', '1');
 		dragHandle.setAttribute('role', 'button');
 		dragHandle.setAttribute('aria-label', 'Drag to reorder section');
-		dragHandle.title = 'Drag to reorder';
+		dragHandle.title = tr(root, 'client_drag_reorder', 'Drag to reorder');
 		dragHandle.draggable = true;
 		dragHandle.textContent = '↕';
 		head.appendChild(dragHandle);
@@ -803,12 +826,12 @@
 
 		const badge = document.createElement('span');
 		badge.className = 'cf-section-template-badge';
-		badge.textContent = getSectionTemplateLabel(template);
+		badge.textContent = getSectionTemplateLabel(root, template);
 		selectButton.appendChild(badge);
 
 		const marker = document.createElement('span');
 		marker.className = 'cf-selected-marker';
-		marker.textContent = 'Selected';
+		marker.textContent = tr(root, 'client_selected', 'Selected');
 		marker.setAttribute('aria-hidden', 'true');
 		selectButton.appendChild(marker);
 
@@ -820,7 +843,7 @@
 		if (item.changeRequest && item.changeRequest.feedback) {
 			const note = document.createElement('span');
 			note.className = 'cf-change-note';
-			note.textContent = 'Change request: ' + item.changeRequest.feedback;
+			note.textContent = tr(root, 'client_change_request_value', 'Change request: {value}', {value: item.changeRequest.feedback});
 			card.appendChild(note);
 		}
 
@@ -883,7 +906,7 @@
 		details.open = !!open;
 
 		const summary = document.createElement('summary');
-		summary.textContent = preview.label || 'Show section content';
+		summary.textContent = getTemplatePreviewLabel(root, getSectionTemplate(section, template));
 		details.appendChild(summary);
 
 		const body = document.createElement('div');
@@ -942,7 +965,7 @@
 
 			const image = document.createElement('p');
 			image.className = item.className || 'cf-template-extra';
-			image.textContent = 'Image: ' + String(value.alt || value.title || value.url || 'planned image');
+			image.textContent = tr(root, 'client_image_value', 'Image: {value}', {value: String(value.alt || value.title || value.url || tr(root, 'client_planned_image', 'planned image'))});
 			target.appendChild(image);
 			return;
 		}
@@ -1000,14 +1023,68 @@
 		return ['micro_learning', 'short_overview', 'checklist', 'faq'].indexOf(value) >= 0 ? value : 'micro_learning';
 	}
 
-	function getSectionTemplateLabel(template) {
+	function getSectionTemplateLabel(root, template) {
 		template = normalizeSectionTemplate(template);
 
-		if (template === 'faq') return 'FAQ';
-		if (template === 'checklist') return 'Checklist';
-		if (template === 'short_overview') return 'Info';
+		if (template === 'faq') return tr(root, 'template_faq', 'FAQ');
+		if (template === 'checklist') return tr(root, 'template_checklist', 'Checklist');
+		if (template === 'short_overview') return tr(root, 'client_template_info', 'Info');
 
-		return 'Card';
+		return tr(root, 'client_template_card', 'Card');
+	}
+
+	function getSectionTemplateFullLabel(root, template) {
+		template = normalizeSectionTemplate(template);
+
+		if (template === 'faq') return tr(root, 'section_faq', 'FAQ section');
+		if (template === 'checklist') return tr(root, 'section_checklist', 'Checklist section');
+		if (template === 'short_overview') return tr(root, 'section_information', 'Information section');
+
+		return tr(root, 'section_micro_learning', 'Micro-learning card');
+	}
+
+	function getTemplatePreviewLabel(root, template) {
+		template = normalizeSectionTemplate(template);
+
+		if (template === 'faq') return tr(root, 'show_answer', 'Show answer');
+		if (template === 'checklist') return tr(root, 'show_checklist_details', 'Show checklist details');
+		if (template === 'short_overview') return tr(root, 'show_overview_text', 'Show overview text');
+
+		return tr(root, 'show_section_content', 'Show section content');
+	}
+
+	function getSchemaFieldTranslation(root, template, path, schema) {
+		template = normalizeSectionTemplate(template);
+		const leaf = String(path || '').split('.').pop();
+		let label = schema && schema.title ? schema.title : labelFromKey(leaf);
+		let description = schema && schema.description ? schema.description : '';
+
+		if (leaf === 'template') label = tr(root, 'section_template', 'Section template');
+		if (leaf === 'title') label = template === 'faq' ? tr(root, 'question', 'Question') : tr(root, 'headline', 'Headline');
+		if (leaf === 'body') {
+			if (template === 'faq') label = tr(root, 'answer', 'Answer');
+			else if (template === 'checklist') label = tr(root, 'intro_text', 'Intro text');
+			else label = tr(root, 'text', 'Text');
+		}
+		if (leaf === 'items') {
+			label = tr(root, 'checklist_items', 'Checklist items');
+			description = tr(root, 'one_item_per_line', 'One item per line.');
+		}
+		if (leaf === 'footer') {
+			label = tr(root, 'footer', 'Footer');
+			description = tr(root, 'footer_description', 'Optional small note below the text.');
+		}
+		if (leaf === 'prompt') {
+			if (template === 'faq') {
+				label = tr(root, 'follow_up_prompt', 'Follow-up prompt');
+				description = tr(root, 'follow_up_prompt_description', 'Optional prompt shown below this answer.');
+			} else {
+				label = tr(root, 'learner_prompt', 'Learner prompt');
+				description = tr(root, 'learner_prompt_description', 'Optional prompt shown below this card.');
+			}
+		}
+
+		return {label: label, description: description};
 	}
 
 	function getLanguageCode(content) {
@@ -1070,7 +1147,7 @@
 		if (section.image && typeof section.image === 'object') {
 			const image = document.createElement('p');
 			image.className = 'cf-template-extra';
-			image.textContent = 'Image: ' + String(section.image.alt || section.image.title || section.image.url || 'planned image');
+			image.textContent = tr(root, 'client_image_value', 'Image: {value}', {value: String(section.image.alt || section.image.title || section.image.url || tr(root, 'client_planned_image', 'planned image'))});
 			target.appendChild(image);
 		}
 	}
@@ -1098,7 +1175,7 @@
 		const version = review.version || 1;
 		if (review.status === 'automatic_generation_failed') {
 			notice.hidden = false;
-			notice.textContent = review.message || 'Automatic revision failed. The previous proposal was kept.';
+			notice.textContent = review.message || tr(root, 'client_auto_revision_failed', 'Automatic revision failed. The previous proposal was kept.');
 			return;
 		}
 
@@ -1109,7 +1186,7 @@
 		}
 
 		notice.hidden = false;
-		notice.textContent = 'Version ' + version + ': The last change request was processed.';
+		notice.textContent = tr(root, 'client_version_processed', 'Version {version}: The last change request was processed.', {version: version});
 	}
 
 	function clearSectionSelection(root) {
@@ -1211,7 +1288,7 @@
 		if (selected.length === 0) {
 			const info = document.createElement('p');
 			info.className = 'cf-muted';
-			info.textContent = 'No sections selected. The change request will be treated as whole-proposal feedback.';
+			info.textContent = tr(root, 'client_no_sections_feedback', 'No sections selected. The change request will be treated as whole-proposal feedback.');
 			target.appendChild(info);
 			return;
 		}
@@ -1219,8 +1296,8 @@
 		const intro = document.createElement('p');
 		intro.className = 'cf-muted';
 		intro.textContent = selected.length === 1
-			? 'The following change request will focus on this section.'
-			: 'The following change request will focus on these sections.';
+			? tr(root, 'client_feedback_one_section', 'The following change request will focus on this section.')
+			: tr(root, 'client_feedback_multiple_sections', 'The following change request will focus on these sections.');
 		target.appendChild(intro);
 
 		selected.forEach(function(index) {
@@ -1228,7 +1305,7 @@
 			box.className = 'cf-feedback-context-box';
 
 			const heading = document.createElement('h3');
-			heading.textContent = sections[index].title || 'Section ' + (index + 1);
+			heading.textContent = sections[index].title || tr(root, 'client_section_number', 'Section {index}', {index: index + 1});
 			box.appendChild(heading);
 
 			box.appendChild(renderTemplateDetails(root, sections[index], false, getSectionTemplate(sections[index], content.generatorTemplate || 'micro_learning')));
@@ -1253,8 +1330,8 @@
 		if (documentFields) documentFields.hidden = isTargetedEdit;
 		if (intro) {
 			intro.textContent = isTargetedEdit
-				? 'Only the selected sections are shown. Applying edits returns to the review step.'
-				: 'No sections are selected. The full proposal can be edited. Applying edits returns to the review step.';
+				? tr(root, 'client_edit_selected_only', 'Only the selected sections are shown. Applying edits returns to the review step.')
+				: tr(root, 'client_edit_full_proposal', 'No sections are selected. The full proposal can be edited. Applying edits returns to the review step.');
 		}
 		if (!target) return;
 
@@ -1267,7 +1344,7 @@
 			wrap.setAttribute('data-cf-edit-section', String(index));
 
 			const title = document.createElement('h3');
-			title.textContent = section.title || 'Section ' + (index + 1);
+			title.textContent = section.title || tr(root, 'client_section_number', 'Section {index}', {index: index + 1});
 			wrap.appendChild(title);
 
 			renderSectionEditFields(wrap, section, index, root);
@@ -1284,13 +1361,13 @@
 
 		if (properties) {
 			Object.keys(properties).forEach(function(path) {
-				renderSchemaField(target, index, path, properties[path], section, root);
+				renderSchemaField(target, index, path, properties[path], section, root, template);
 				rendered.add(path);
 			});
 		} else {
 			appendTemplateEditField(target, index, template, root);
-			appendEditField(target, index, 'title', 'Headline', section.title || '', 'text');
-			appendEditField(target, index, 'body', 'Text', section.body || '', 'textarea');
+			appendEditField(target, index, 'title', tr(root, 'headline', 'Headline'), section.title || '', 'text');
+			appendEditField(target, index, 'body', tr(root, 'text', 'Text'), section.body || '', 'textarea');
 			rendered.add('template');
 			rendered.add('title');
 			rendered.add('body');
@@ -1311,7 +1388,7 @@
 		});
 	}
 
-	function renderSchemaField(target, index, path, schema, section, root, prefix) {
+	function renderSchemaField(target, index, path, schema, section, root, template, prefix) {
 		prefix = prefix || '';
 		const fullPath = prefix ? prefix + '.' + path : path;
 
@@ -1326,12 +1403,13 @@
 
 		if (schema && schema.type === 'object' && schema.properties) {
 			Object.keys(schema.properties).forEach(function(childPath) {
-				renderSchemaField(target, index, childPath, schema.properties[childPath], section, root, fullPath);
+				renderSchemaField(target, index, childPath, schema.properties[childPath], section, root, template, fullPath);
 			});
 			return;
 		}
 
-		const label = schema && schema.title ? schema.title : labelFromKey(path);
+		const fieldTranslation = getSchemaFieldTranslation(root, template, fullPath, schema);
+		const label = fieldTranslation.label;
 		const control = schema && schema['x-contentforge-control'] ? schema['x-contentforge-control'] : '';
 		const value = getPathValue(section, fullPath.split('.'));
 		let mode = 'text';
@@ -1344,7 +1422,7 @@
 			mode = 'string_array';
 		}
 
-		appendEditField(target, index, fullPath, label, formatEditValue(value, mode), mode, schema && schema.description ? schema.description : '');
+		appendEditField(target, index, fullPath, label, formatEditValue(value, mode), mode, fieldTranslation.description);
 	}
 
 	function getPathValue(target, path) {
@@ -1374,7 +1452,7 @@
 		const id = 'cf_edit_' + index + '_template';
 		const labelNode = document.createElement('label');
 		labelNode.setAttribute('for', id);
-		labelNode.textContent = 'Section template';
+		labelNode.textContent = tr(root, 'section_template', 'Section template');
 		target.appendChild(labelNode);
 
 		const select = document.createElement('select');
@@ -1386,7 +1464,7 @@
 			const definition = getTemplateDefinitions(root)[key];
 			const option = document.createElement('option');
 			option.value = key;
-			option.textContent = definition.label || getSectionTemplateLabel(key);
+			option.textContent = getSectionTemplateFullLabel(root, key);
 			option.selected = key === normalizeSectionTemplate(value);
 			select.appendChild(option);
 		});
@@ -1522,7 +1600,7 @@
 		let selected = getSelectedIndexes(root).filter(function(index) { return sections[index]; });
 
 		if (selected.length === 0) {
-			return {error: 'Select at least one section first.'};
+			return {error: tr(root, 'client_select_section_first', 'Select at least one section first.')};
 		}
 
 		selected = Array.from(new Set(selected)).sort(function(a, b) { return a - b; });
@@ -1532,7 +1610,7 @@
 		});
 
 		if (direction === 'up') {
-			if (selected[0] === 0) return {error: 'The selected section is already at the top.'};
+			if (selected[0] === 0) return {error: tr(root, 'client_section_already_top', 'The selected section is already at the top.')};
 
 			for (let i = 1; i < wrapped.length; i++) {
 				if (wrapped[i].selected && !wrapped[i - 1].selected) {
@@ -1542,7 +1620,7 @@
 				}
 			}
 		} else {
-			if (selected[selected.length - 1] >= sections.length - 1) return {error: 'The selected section is already at the bottom.'};
+			if (selected[selected.length - 1] >= sections.length - 1) return {error: tr(root, 'client_section_already_bottom', 'The selected section is already at the bottom.')};
 
 			for (let i = wrapped.length - 2; i >= 0; i--) {
 				if (wrapped[i].selected && !wrapped[i + 1].selected) {
@@ -1574,7 +1652,7 @@
 		const selected = getSelectedIndexes(root).filter(function(index) { return sections[index]; });
 
 		if (selected.length === 0) {
-			return {error: 'Select at least one section first.'};
+			return {error: tr(root, 'client_select_section_first', 'Select at least one section first.')};
 		}
 
 		let offset = 0;
@@ -1584,7 +1662,7 @@
 			const insertAt = index + 1 + offset;
 			const copy = clone(sections[index]);
 			copy.id = '';
-			copy.title = getDuplicatedTitle(copy.title || 'Section ' + (index + 1));
+			copy.title = getDuplicatedTitle(root, copy.title || tr(root, 'client_section_number', 'Section {index}', {index: index + 1}));
 			sections.splice(insertAt, 0, copy);
 			duplicated.push(insertAt);
 			offset++;
@@ -1601,14 +1679,14 @@
 		return {content: content, selectedIndexes: duplicated};
 	}
 
-	function getDuplicatedTitle(title) {
+	function getDuplicatedTitle(root, title) {
 		const value = String(title || '').trim();
 
 		if (value === '') {
-			return 'Copy';
+			return tr(root, 'client_copy', 'Copy');
 		}
 
-		return value + ' (copy)';
+		return tr(root, 'client_copy_suffix', '{value} (copy)', {value: value});
 	}
 
 	function buildDeleteSectionsContent(root) {
@@ -1617,11 +1695,11 @@
 		const selected = getSelectedIndexes(root).filter(function(index) { return sections[index]; });
 
 		if (selected.length === 0) {
-			return {error: 'Select at least one section first.'};
+			return {error: tr(root, 'client_select_section_first', 'Select at least one section first.')};
 		}
 
 		if (selected.length >= sections.length) {
-			return {error: 'At least one section must remain.'};
+			return {error: tr(root, 'client_one_section_required', 'At least one section must remain.')};
 		}
 
 		const selectedSet = new Set(selected);
@@ -1643,7 +1721,7 @@
 		const sections = Array.isArray(content.sections) ? content.sections : [];
 
 		if (!Number.isInteger(fromIndex) || !Number.isInteger(toIndex) || !sections[fromIndex] || !sections[toIndex]) {
-			return {error: 'The section could not be moved.'};
+			return {error: tr(root, 'client_section_move_failed', 'The section could not be moved.')};
 		}
 
 		if (fromIndex === toIndex) {
@@ -1681,7 +1759,7 @@
 			setScreen(root, 'proposal');
 		}
 
-		setStatus(root, payload.ok ? successMessage : (payload.error || 'Error.'), payload);
+		setStatus(root, payload.ok ? successMessage : (payload.error || tr(root, 'client_error', 'Error.')), payload);
 		return payload;
 	}
 
@@ -1699,20 +1777,20 @@
 		const list = document.createElement('dl');
 		list.className = 'cf-result-list';
 
-		appendResult(list, 'Status', 'Accepted and export step executed.');
+		appendResult(root, list, tr(root, 'client_result_status', 'Status'), tr(root, 'client_result_accepted', 'Accepted and export step executed.'));
 
 		if (url !== '') {
-			appendResult(list, 'URL', url);
+			appendResult(root, list, 'URL', url);
 		}
 
 		if (path !== '') {
-			appendResult(list, 'Storage', path);
+			appendResult(root, list, tr(root, 'client_result_storage', 'Storage'), path);
 		}
 
 		target.appendChild(list);
 	}
 
-	function appendResult(list, key, value) {
+	function appendResult(root, list, key, value) {
 		const dt = document.createElement('dt');
 		dt.textContent = key;
 		list.appendChild(dt);
@@ -1722,7 +1800,7 @@
 		if (key === 'URL' && String(value).trim() !== '') {
 			const link = document.createElement('a');
 			link.href = value;
-			link.textContent = 'Download export';
+			link.textContent = tr(root, 'client_download_export', 'Download export');
 			link.target = '_blank';
 			link.rel = 'noopener';
 			dd.appendChild(link);
@@ -1752,7 +1830,7 @@
 		if (feedback) feedback.value = '';
 
 		setScreen(root, 'material');
-		setStatus(root, 'Ready.', null);
+		setStatus(root, tr(root, 'client_ready', 'Ready.'), null);
 	}
 
 	function setupDragAndDrop(root, config) {
@@ -1811,9 +1889,9 @@
 
 			setBusy(root, true);
 			try {
-				await submitEditedProposal(root, config, operation.content, operation.selectedIndexes, 'Section order updated. Review the updated proposal.');
+				await submitEditedProposal(root, config, operation.content, operation.selectedIndexes, tr(root, 'client_section_order_updated', 'Section order updated. Review the updated proposal.'));
 			} catch (error) {
-				setStatus(root, 'Request failed: ' + error.message, {ok: false, error: error.message});
+				setStatus(root, tr(root, 'client_request_failed_error', 'Request failed: {error}', {error: error.message}), {ok: false, error: error.message});
 			} finally {
 				setBusy(root, false);
 			}
@@ -1828,6 +1906,7 @@
 	}
 
 	function init(root, config) {
+		root.__contentForgeStrings = config.strings || {};
 		root.__contentForgePreferredExportTemplate = config.exportTemplate || '';
 		rememberTemplateDefinitions(root, config.sectionTemplates || null);
 		setupMaterialRows(root, config);
@@ -1855,14 +1934,14 @@
 			if (action === 'open-feedback') {
 				renderFeedbackContext(root);
 				setScreen(root, 'feedback');
-				setStatus(root, 'Describe what should change.', null);
+				setStatus(root, tr(root, 'client_describe_changes', 'Describe what should change.'), null);
 				return;
 			}
 
 			if (action === 'open-edit') {
 				renderEditForm(root);
 				setScreen(root, 'edit');
-				setStatus(root, 'Edit the selected content and review the result before accepting.', null);
+				setStatus(root, tr(root, 'client_edit_selected', 'Edit the selected content and review the result before accepting.'), null);
 				return;
 			}
 
@@ -1881,20 +1960,20 @@
 
 				try {
 					let operation = null;
-					let message = 'Proposal updated.';
+					let message = tr(root, 'client_proposal_updated', 'Proposal updated.');
 
 					if (action === 'add-section') {
 						operation = buildAddSectionContent(root);
-						message = 'Section added. Review the updated proposal.';
+						message = tr(root, 'client_section_added', 'Section added. Review the updated proposal.');
 					} else if (action === 'duplicate-section') {
 						operation = buildDuplicateSectionsContent(root);
-						message = 'Section duplicated. Review the updated proposal.';
+						message = tr(root, 'client_section_duplicated', 'Section duplicated. Review the updated proposal.');
 					} else if (action === 'delete-section') {
 						operation = buildDeleteSectionsContent(root);
-						message = 'Section deleted. Review the updated proposal.';
+						message = tr(root, 'client_section_deleted', 'Section deleted. Review the updated proposal.');
 					} else {
 						operation = buildMoveSectionsContent(root, action === 'move-section-up' ? 'up' : 'down');
-						message = 'Section order updated. Review the updated proposal.';
+						message = tr(root, 'client_section_order_updated', 'Section order updated. Review the updated proposal.');
 					}
 
 					if (operation.error) {
@@ -1904,7 +1983,7 @@
 
 					await submitEditedProposal(root, config, operation.content, operation.selectedIndexes, message);
 				} catch (error) {
-					setStatus(root, 'Request failed: ' + error.message, {ok: false, error: error.message});
+					setStatus(root, tr(root, 'client_request_failed_error', 'Request failed: {error}', {error: error.message}), {ok: false, error: error.message});
 				} finally {
 					setBusy(root, false);
 				}
@@ -1917,12 +1996,12 @@
 				let payload = null;
 
 				if (action === 'start-widget') {
-					setStatus(root, 'Processing materials and creating proposal.', null);
+					setStatus(root, tr(root, 'client_creating_proposal', 'Processing materials and creating proposal.'), null);
 					await ensureMaterialPreviews(root, config);
 					const materials = collectMaterialInputs(root);
 					payload = await request(config, {
 						action: 'start_widget',
-						title: field(root, 'title')?.value || 'ContentForge Project',
+						title: field(root, 'title')?.value || tr(root, 'default_project_title', 'ContentForge Project'),
 						generatorType: field(root, 'generator')?.value || config.generatorType,
 						generatorTemplate: field(root, 'template')?.value || 'micro_learning',
 						targetSectionCount: field(root, 'targetSectionCount')?.value || 'auto',
@@ -1937,11 +2016,11 @@
 						setScreen(root, 'proposal');
 					}
 
-					setStatus(root, payload.ok ? 'Proposal ready.' : (payload.error || 'Error.'), payload);
+					setStatus(root, payload.ok ? tr(root, 'client_proposal_ready', 'Proposal ready.') : (payload.error || tr(root, 'client_error', 'Error.')), payload);
 				}
 
 				if (action === 'send-feedback') {
-					setStatus(root, 'Processing materials and creating a revised proposal.', null);
+					setStatus(root, tr(root, 'client_creating_revision', 'Processing materials and creating a revised proposal.'), null);
 					await ensureMaterialPreviews(root, config);
 					const materials = collectMaterialInputs(root);
 					payload = await request(config, {
@@ -1963,7 +2042,7 @@
 						setScreen(root, 'proposal');
 					}
 
-					setStatus(root, payload.ok ? 'New proposal ready.' : (payload.error || 'Error.'), payload);
+					setStatus(root, payload.ok ? tr(root, 'client_new_proposal_ready', 'New proposal ready.') : (payload.error || tr(root, 'client_error', 'Error.')), payload);
 				}
 
 				if (action === 'accept-widget' || action === 'accept-edit') {
@@ -1987,17 +2066,17 @@
 					if (payload.ok && action === 'accept-edit') {
 						renderProposal(root, firstProposal(payload));
 						setScreen(root, 'proposal');
-						setStatus(root, 'Manual edits applied. Review the updated proposal.', payload);
+						setStatus(root, tr(root, 'client_manual_edits_applied', 'Manual edits applied. Review the updated proposal.'), payload);
 					} else if (payload.ok) {
 						renderDone(root, payload || {});
 						setScreen(root, 'done');
-						setStatus(root, 'Done.', payload);
+						setStatus(root, tr(root, 'client_done', 'Done.'), payload);
 					} else {
-						setStatus(root, payload.error || 'Error.', payload);
+						setStatus(root, payload.error || tr(root, 'client_error', 'Error.'), payload);
 					}
 				}
 			} catch (error) {
-				setStatus(root, 'Request failed: ' + error.message, {ok: false, error: error.message});
+				setStatus(root, tr(root, 'client_request_failed_error', 'Request failed: {error}', {error: error.message}), {ok: false, error: error.message});
 			} finally {
 				setBusy(root, false);
 			}
