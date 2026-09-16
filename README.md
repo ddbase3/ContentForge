@@ -67,3 +67,8 @@ See the `docs/` directory:
 ## Patch 0.1.32 note
 
 PPTX exports now use a stricter OpenXML package structure for Microsoft PowerPoint compatibility. The exporter still creates one title slide plus one slide per generated ContentForge section, but now includes the required package properties, presentation properties, view properties, table style part, slide-layout relationship and a complete theme formatting scheme.
+
+## Documentation
+
+- [Frequently Asked Questions](docs/faq.md)
+- [Privacy and data processing](PRIVACY.md)
