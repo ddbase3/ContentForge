@@ -128,10 +128,6 @@ class ContentForgeFileStorageExportTarget implements IContentForgeExportTarget {
 			return $configuredPath;
 		}
 
-		if (defined('DIR_PLUGIN')) {
-			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge/var/exports';
-		}
-
 		return dirname(__DIR__, 2) . '/var/exports';
 	}
 }

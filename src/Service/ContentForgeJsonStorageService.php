@@ -143,10 +143,6 @@ class ContentForgeJsonStorageService implements IContentForgeJsonStorageService 
 	}
 
 	protected function getBasePath(): string {
-		if (defined('DIR_PLUGIN')) {
-			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge';
-		}
-
 		return dirname(__DIR__, 2);
 	}
 }

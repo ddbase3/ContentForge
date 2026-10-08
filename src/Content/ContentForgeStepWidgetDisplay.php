@@ -43,7 +43,7 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 	}
 
 	public function getOutput(string $out = 'html', bool $final = false): string {
-		$this->view->setPath(DIR_PLUGIN . 'ContentForge');
+		$this->view->setPath(dirname(__DIR__, 2));
 		$this->loadTranslations();
 		$this->view->setTemplate('Content/ContentForgeStepWidgetDisplay.php');
 
@@ -173,7 +173,7 @@ class ContentForgeStepWidgetDisplay implements IDisplay, ISchemaProvider {
 
 
 	private function loadTranslations(): void {
-		$this->view->setPath(DIR_PLUGIN . 'ContentForge');
+		$this->view->setPath(dirname(__DIR__, 2));
 		$this->view->loadBricks('Display');
 
 		$translations = $this->view->getBricks('contentforge_step_widget_display');

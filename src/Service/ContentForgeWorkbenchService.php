@@ -1172,10 +1172,6 @@ class ContentForgeWorkbenchService implements IOutput {
 	}
 
 	protected function getFallbackLogDir(): string {
-		if (defined('DIR_PLUGIN')) {
-			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge/var/log';
-		}
-
 		return dirname(__DIR__, 2) . '/var/log';
 	}
 

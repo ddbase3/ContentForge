@@ -105,10 +105,6 @@ class ContentForgeExportDownloadService implements IOutput {
 	}
 
 	protected function getExportPath(): string {
-		if (defined('DIR_PLUGIN')) {
-			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge/var/exports';
-		}
-
 		return dirname(__DIR__, 2) . '/var/exports';
 	}
 

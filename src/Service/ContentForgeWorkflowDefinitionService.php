@@ -73,10 +73,6 @@ class ContentForgeWorkflowDefinitionService implements IContentForgeWorkflowDefi
 	}
 
 	protected function getRecipePath(): string {
-		if (defined('DIR_PLUGIN')) {
-			return rtrim((string) DIR_PLUGIN, '/\\') . '/ContentForge/config/recipes';
-		}
-
 		return dirname(__DIR__, 2) . '/config/recipes';
 	}
 
